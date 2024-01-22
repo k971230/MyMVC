@@ -21,13 +21,13 @@ public class indexController {
 	@Autowired  
 	private ProductService pservice;
 	
-	@GetMapping(value="/MyMVC") 
+	@GetMapping(value="/") 
 	public ModelAndView home(ModelAndView mav) {
-		mav.setViewName("redirect:/MyMVC/index.up");
+		mav.setViewName("redirect:/index.up");
 		return mav;
 	}
 	
-	@GetMapping("/MyMVC/index.up")   
+	@GetMapping("/index.up")   
 	public ModelAndView index(HttpServletRequest request,ModelAndView mav) {
 		
 		//인덱스 이미지 가져오기
