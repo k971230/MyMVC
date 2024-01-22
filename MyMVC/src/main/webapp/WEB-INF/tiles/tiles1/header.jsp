@@ -52,7 +52,7 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                  <a class="dropdown-item text-info" href="<%= ctxPath %>/shop/cartList.up">장바구니</a>
-                 <a class="dropdown-item text-info" href="<%= ctxPath %>/shop/orderList.up">나의주문내역</a>
+                 <a class="dropdown-item text-info" href="<%= ctxPath %>/order/orderList.up">나의주문내역</a>
                  
               </div>
            </li>
@@ -70,7 +70,7 @@
                  <a class="dropdown-item text-primary" href="<%= ctxPath %>/member/memberList.up">회원목록</a>
                  <a class="dropdown-item text-primary" href="<%= ctxPath %>/shop/admin/productRegister.up">제품등록</a>
                  <div class="dropdown-divider"></div>
-                 <a class="dropdown-item text-primary" href="<%= ctxPath %>/shop/orderList.up">전체주문내역</a>
+                 <a class="dropdown-item text-primary" href="<%= ctxPath %>/order/orderList.up">전체주문내역</a>
               </div>
            </li>
            </c:if>
