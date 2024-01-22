@@ -171,11 +171,11 @@
 	       <tbody>
 	           <tr>
 	               <td>ID</td>
-	               <td><input type="text" name="userid" id="loginUserid" size="20" autocomplete="off" /></td>
+	               <td><input type="text" class="form-control" name="userid" id="loginUserid" size="20" autocomplete="off" /></td>
 	           </tr>
 	           <tr>
 	               <td>암호</td>
-	               <td><input type="password" name="pwd" id="loginPwd" size="20" /></td>
+	               <td><input type="password" class="form-control" name="pwd" id="loginPwd" size="20" /></td>
 	           </tr>
 	           
 	           <%-- ==== 아이디 찾기, 비밀번호 찾기 ==== --%>

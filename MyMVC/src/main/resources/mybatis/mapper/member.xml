@@ -6,4 +6,34 @@
 <!-- ==== 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="member">
 
-</mapper> 
+	<!-- ==== 로그인 처리하기 ==== -->         	
+	<select id="getLoginMember" resultType="com.spring.app.domain.MemberVO" parameterType="HashMap"> 
+		SELECT userid, name, email, mobile, postcode, address, detailaddress, extraaddress, gender 
+		     , birthday, coin, point, registerday, pwdchangegap 
+			 , nvl( lastlogingap , trunc( months_between(sysdate, to_date(registerday, 'yyyy-mm-dd'))) ) AS lastlogingap  
+			 , idle
+			 , gradelevel  
+		FROM 
+		( 
+		 select userid, name, email, mobile, postcode, address, detailaddress, extraaddress, gender  
+		      , birthday, coin, point, to_char(registerday, 'yyyy-mm-dd') AS registerday  
+		      , trunc( months_between(sysdate, lastpwdchangedate) ) AS pwdchangegap 
+		      , idle 
+		      , gradelevel  
+		 from tbl_member 
+		 where status = 1 and userid = #{userid} and pwd = #{pwd}  
+		) M 
+		CROSS JOIN 
+		( 
+		 select trunc( months_between(sysdate, max(logindate)) ) AS lastlogingap 
+		 from tbl_loginhistory 
+		 where fk_userid = #{userid} 
+		) H
+	</select>
+	
+	<!-- ==== tbl_member 테이블의 idle 컬럼의 값을 1로 변경하기 ==== -->
+	<update id="updateIdle" parameterType="String">
+		update tbl_member set idle = 1 
+		where userid = #{userid}
+	</update>
+</mapper>
