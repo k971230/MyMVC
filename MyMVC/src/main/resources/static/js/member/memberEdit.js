@@ -26,7 +26,7 @@ $(document).ready(function(){
          $("table#tblMemberEdit :input").prop("disabled", true);  
          $(e.target).prop("disabled", false); 
          
-      //   $(e.target).next().show();
+      //  $(e.target).next().show();
       //  또는
           $(e.target).parent().find("span.error").show();
               
@@ -36,7 +36,7 @@ $(document).ready(function(){
          // 공백이 아닌 글자를 입력했을 경우
          $("table#tblMemberEdit :input").prop("disabled", false);
          
-         //   $(e.target).next().hide();
+          //   $(e.target).next().hide();
           //  또는
           $(e.target).parent().find("span.error").hide();
       }
@@ -59,7 +59,7 @@ $(document).ready(function(){
          $("table#tblMemberEdit :input").prop("disabled", true);  
          $(e.target).prop("disabled", false); 
          
-      //   $(e.target).next().show();
+      //  $(e.target).next().show();
       //  또는
           $(e.target).parent().find("span.error").show();
               
@@ -70,8 +70,8 @@ $(document).ready(function(){
          $("table#tblMemberEdit :input").prop("disabled", false);
          
          //   $(e.target).next().hide();
-          //  또는
-          $(e.target).parent().find("span.error").hide();
+         //  또는
+         $(e.target).parent().find("span.error").hide();
       }
       
    });// 아이디가 pwd 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
@@ -86,17 +86,17 @@ $(document).ready(function(){
          $("input#pwd").prop("disabled", false);
          $(e.target).prop("disabled", false); 
          
-      //   $(e.target).next().show();
+      //  $(e.target).next().show();
       //  또는
           $(e.target).parent().find("span.error").show();
           
-         $("input#pwd").focus();
+          $("input#pwd").focus();
       }
       else {
-         // 암호와 암호확인값이 같은 경우
-         $("table#tblMemberEdit :input").prop("disabled", false);
+          // 암호와 암호확인값이 같은 경우
+          $("table#tblMemberEdit :input").prop("disabled", false);
          
-         //   $(e.target).next().hide();
+          //   $(e.target).next().hide();
           //  또는
           $(e.target).parent().find("span.error").hide();
       }
@@ -106,32 +106,32 @@ $(document).ready(function(){
    
    $("input#email").blur( (e) => {
       
-   //   const regExp_email = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;  
+   //  const regExp_email = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;  
    //  또는
        const regExp_email = new RegExp(/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i);  
        // 이메일 정규표현식 객체 생성 
        
        const bool = regExp_email.test($(e.target).val());   
       
-      if(!bool) {
+       if(!bool) {
          // 이메일이 정규표현식에 위배된 경우 
          
          $("table#tblMemberEdit :input").prop("disabled", true);  
          $(e.target).prop("disabled", false); 
          
-      //   $(e.target).next().show();
+      //  $(e.target).next().show();
       //  또는
           $(e.target).parent().find("span.error").show();
               
-         $(e.target).val("").focus(); 
+          $(e.target).val("").focus(); 
       }
       else {
          // 이메일이 정규표현식에 맞는 경우 
          $("table#tblMemberEdit :input").prop("disabled", false);
          
          //   $(e.target).next().hide();
-          //  또는
-          $(e.target).parent().find("span.error").hide();
+         //  또는
+         $(e.target).parent().find("span.error").hide();
       }
       
    });// 아이디가 email 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
@@ -139,7 +139,7 @@ $(document).ready(function(){
    
    $("input#hp2").blur( (e) => {
       
-   //   const regExp_hp2 = /^[1-9][0-9]{3}$/;  
+   //  const regExp_hp2 = /^[1-9][0-9]{3}$/;  
    //  또는
        const regExp_hp2 = new RegExp(/^[1-9][0-9]{3}$/);  
        // 연락처 국번( 숫자 4자리인데 첫번째 숫자는 1-9 이고 나머지는 0-9) 정규표현식 객체 생성 
@@ -152,19 +152,19 @@ $(document).ready(function(){
          $("table#tblMemberEdit :input").prop("disabled", true);  
          $(e.target).prop("disabled", false); 
          
-      //   $(e.target).next().next().show();
+      //  $(e.target).next().next().show();
       //  또는
           $(e.target).parent().find("span.error").show();
               
-         $(e.target).val("").focus(); 
+          $(e.target).val("").focus(); 
       }
       else {
          // 연락처 국번이 정규표현식에 맞는 경우 
          $("table#tblMemberEdit :input").prop("disabled", false);
          
          //   $(e.target).next().next().hide();
-          //  또는
-          $(e.target).parent().find("span.error").hide();
+         //  또는
+         $(e.target).parent().find("span.error").hide();
       }
       
    });// 아이디가 hp2 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
@@ -172,13 +172,13 @@ $(document).ready(function(){
    
    $("input#hp3").blur( (e) => {
       
-   //   const regExp_hp3 = /^[0-9]{4}$/;  
+   //  const regExp_hp3 = /^[0-9]{4}$/;  
    //  또는
-   //   const regExp_hp3 = /^\d{4}$/;
-       const regExp_hp3 = new RegExp(/^\d{4}$/);  
-       // 숫자 4자리만 들어오도록 검사해주는 정규표현식 객체 생성 
+   //  const regExp_hp3 = /^\d{4}$/;
+      const regExp_hp3 = new RegExp(/^\d{4}$/);  
+      // 숫자 4자리만 들어오도록 검사해주는 정규표현식 객체 생성 
        
-       const bool = regExp_hp3.test($(e.target).val());   
+      const bool = regExp_hp3.test($(e.target).val());   
       
       if(!bool) {
          // 마지막 전화번호 4자리가 정규표현식에 위배된 경우 
@@ -186,9 +186,9 @@ $(document).ready(function(){
          $("table#tblMemberEdit :input").prop("disabled", true);  
          $(e.target).prop("disabled", false); 
          
-      //   $(e.target).next().show();
+      //  $(e.target).next().show();
       //  또는
-          $(e.target).parent().find("span.error").show();
+         $(e.target).parent().find("span.error").show();
               
          $(e.target).val("").focus(); 
       }
@@ -196,9 +196,9 @@ $(document).ready(function(){
          // 마지막 전화번호 4자리가 정규표현식에 맞는 경우 
          $("table#tblMemberEdit :input").prop("disabled", false);
          
-         //   $(e.target).next().hide();
-          //  또는
-          $(e.target).parent().find("span.error").hide();
+         //  $(e.target).next().hide();
+         //  또는
+         $(e.target).parent().find("span.error").hide();
       }
       
    });// 아이디가 hp3 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
@@ -207,22 +207,22 @@ $(document).ready(function(){
    $("input#postcode").blur( (e) => {
       
    //   const regExp_postcode = /^[0-9]{5}$/;  
-   //  또는
+   //   또는
    //   const regExp_postcode = /^\d{5}$/;
        const regExp_postcode = new RegExp(/^\d{5}$/);  
        // 숫자 5자리만 들어오도록 검사해주는 정규표현식 객체 생성 
        
        const bool = regExp_postcode.test($(e.target).val());   
       
-      if(!bool) {
+       if(!bool) {
          // 우편번호가 정규표현식에 위배된 경우 
          
          $("table#tblMemberEdit :input").prop("disabled", true);  
          $(e.target).prop("disabled", false); 
          
-      //   $(e.target).next().next().show();
+      //  $(e.target).next().next().show();
       //  또는
-          $(e.target).parent().find("span.error").show();
+         $(e.target).parent().find("span.error").show();
               
          $(e.target).val("").focus(); 
       }
@@ -231,8 +231,8 @@ $(document).ready(function(){
          $("table#tblMemberEdit :input").prop("disabled", false);
          
          //   $(e.target).next().next().hide();
-          //  또는
-          $(e.target).parent().find("span.error").hide();
+         //  또는
+         $(e.target).parent().find("span.error").hide();
       }
       
    });// 아이디가 postcode 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
@@ -241,20 +241,20 @@ $(document).ready(function(){
    // === "우편번호찾기"를 클릭했을 때 이벤트 처리하기 === //
    $("img#zipcodeSearch").click(function(){
       
-      // 주소를 쓰기가능 으로 만들기
-      $("input#address").removeAttr("readonly");
+       // 주소를 쓰기가능 으로 만들기
+       $("input#address").removeAttr("readonly");
         
-        // 참고항목을 쓰기가능 으로 만들기
-        $("input#extraAddress").removeAttr("readonly");
+       // 참고항목을 쓰기가능 으로 만들기
+       $("input#extraAddress").removeAttr("readonly");
         
-        // 주소를 활성화 시키기
-   //   $("input#address").removeAttr("disabled");
+       // 주소를 활성화 시키기
+   //  $("input#address").removeAttr("disabled");
         
-        // 참고항목을 활성화 시키기
-    //  $("input#extraAddress").removeAttr("disabled");
+       // 참고항목을 활성화 시키기
+   //  $("input#extraAddress").removeAttr("disabled");
       
-      new daum.Postcode({
-            oncomplete: function(data) {
+       new daum.Postcode({
+           oncomplete: function(data) {
                 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
 
                 // 각 주소의 노출 규칙에 따라 주소를 조합한다.
@@ -297,6 +297,7 @@ $(document).ready(function(){
                 // 커서를 상세주소 필드로 이동한다.
                 document.getElementById("detailAddress").focus();
             }
+        
         }).open();
         
         // 주소를 읽기전용(readonly) 로 만들기
@@ -474,17 +475,4 @@ function goEdit(){
 	}
 	
 }// end of function goEdit()--------------- 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
