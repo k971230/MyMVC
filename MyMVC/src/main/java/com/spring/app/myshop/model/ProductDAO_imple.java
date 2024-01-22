@@ -20,7 +20,7 @@ public class ProductDAO_imple implements ProductDAO {
 	public List<ImageVO> imageSelectAll() {
 		
 		//인덱스 이미지 가져오기
-		List<ImageVO> imgList = sqlsession.selectList("yunsu.imageSelectAll"); 
+		List<ImageVO> imgList = sqlsession.selectList("cart.imageSelectAll"); 
 		
 		return imgList;
 	}
