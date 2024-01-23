@@ -21,7 +21,7 @@
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav" style="font-size: 16pt;">
            <li class="nav-item active">
-              <a class="nav-link menufont_size" href="<%= ctxPath %>/index.up">Home</a>
+              <a class="nav-link menufont_size" href="<%= ctxPath %>/MyMVC/index.up">Home</a>
            </li>
            <li class="nav-item active">
               <a class="nav-link menufont_size" href="<%= ctxPath %>/member/memberRegister.up">회원가입</a>
