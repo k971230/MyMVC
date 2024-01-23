@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
 	
 	$("button#btnSubmit").click(function(){
@@ -33,15 +32,12 @@ function goLogin() {
 		return; // goLogin() 함수 종료
 	}
 	
-	
 	if( $("input:checkbox[id='saveid']").prop("checked") ) {
 		// alert("아이디저장 체크를 하셨네요~~^^");
-		
 		localStorage.setItem('saveid', $("input#loginUserid").val());
 	}
 	else {
 		// alert("아이디저장 체크를 해제 하셨네요!!");
-		
 		localStorage.removeItem('saveid');
 	}
 	
