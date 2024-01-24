@@ -11,5 +11,79 @@
 		from tbl_main_image 
 		order by imgno asc
   </select>
+  
+  <resultMap id="selectProductCart_map" type="com.spring.app.domain.CartVO">
+	   <id property="cartno" column="cartno" />
+	   <id property="fk_userid" column="fk_userid" />
+	   <id property="fk_pnum" column="fk_pnum" />
+	   <id property="oqty" column="oqty" />
+   			
+   	<association property="prod"  javaType="com.spring.app.domain.ProductVO" >
+       <result property="pname"  column="pname" />
+       <result property="pimage1"  column="pimage1" />
+       <result property="saleprice"  column="saleprice" />
+       <result property="point"  column="point" />
+       <result property="pqty"  column="pqty" />
+       <result property="totalPrice"  column="totalPrice" />
+       <result property="totalPoint"  column="totalPoint" />
+       
+    </association>
+        
+        
+</resultMap>
+  <select id="selectProductCart" parameterType="String" resultMap="selectProductCart_map">
+   select C.cartno, C.fk_userid, C.fk_pnum, C.oqty, P.pname, P.pimage1, P.saleprice, P.point,P.pqty
+   			,(C.oqty * P.saleprice) as totalPrice
+    		,(C.oqty * P.point) as totalPoint
+   			 
+		  from ( select cartno, fk_userid, fk_pnum, oqty, registerday 
+				from tbl_cart 
+				where fk_userid = #{userid}) C 
+				JOIN tbl_product P 
+				ON C.fk_pnum = P.pnum 
+				ORDER BY C.cartno DESC 
+  </select>
+  
+  
+  <resultMap type="HashMap" id="selectCartSumPricePoint_Map">
+	    <result property="SUMTOTALPRICE"  	column="SUMTOTALPRICE"  	javaType="String" />
+	    <result property="SUMTOTALPOINT"  	column="SUMTOTALPOINT"  		javaType="String" />
+	   
+	</resultMap>
+  <select id="selectCartSumPricePoint" parameterType="String" resultMap="selectCartSumPricePoint_Map">
+   select  nvl(sum(C.oqty * P.saleprice),0) AS SUMTOTALPRICE 
+					           , nvl(sum(C.oqty * P.point),0) AS SUMTOTALPOINT 
+					    from ( select fk_pnum, oqty 
+					           from tbl_cart 
+					           where fk_userid = #{userid}) C 
+					    JOIN tbl_product P 
+					    ON C.fk_pnum = P.pnum 
+  </select>
+  
+  <select id="addCartselect" parameterType="HashMap" resultType="String">
+  	select cartno 
+	from tbl_cart 
+	where fk_userid = #{userid} and fk_pnum = #{pnum} 
+  </select>
+  
+  <update id="addUpdateCart" parameterType="HashMap"> 
+  	update tbl_cart set oqty = oqty + #{oqty}
+	where cartno = #{cartno} 
+  </update>
+  
+  <insert id="addInsertCart" parameterType="HashMap">
+  	insert into tbl_cart(cartno, fk_userid, fk_pnum, oqty, registerday) 
+	values(seq_tbl_cart_cartno.nextval, #{userid}, #{pnum}, #{oqty}, default)
+  </insert>
+  
+  <update id="updateCart" parameterType="HashMap">
+  	update tbl_cart set oqty = #{oqty}
+	where cartno = #{cartno} 
+  </update>
+  
+  <delete id="delCart" parameterType="String">
+  	delete from tbl_cart 
+	where cartno = #{cartno}
+  </delete>
 
 </mapper>
