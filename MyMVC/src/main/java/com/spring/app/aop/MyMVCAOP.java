@@ -57,8 +57,9 @@ public class MyMVCAOP {
 		
 	 	HttpSession session = request.getSession();
 	 	if(session.getAttribute("loginuser") == null) {
+	 		
 	 		String message = "먼저 로그인 하세요~~";
-	 		String loc = request.getContextPath()+"/login.action";
+	 		String loc = request.getContextPath()+"/index.up";
 	 		
 	 		request.setAttribute("message", message);
 	 		request.setAttribute("loc", loc);
@@ -72,13 +73,11 @@ public class MyMVCAOP {
 				dispatcher.forward(request, response);
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
+				
 			}
 	 	}
 		
 	}
 	
-	
 
-		
-	
 }

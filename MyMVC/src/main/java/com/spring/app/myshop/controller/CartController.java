@@ -1,9 +1,11 @@
 package com.spring.app.myshop.controller;
 
+
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,20 +14,23 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.spring.app.common.Sha256;
+
 import com.spring.app.domain.CartVO;
 import com.spring.app.domain.MemberVO;
-import com.spring.app.member.service.MemberService;
+
 import com.spring.app.myshop.service.CartService;
 
+
 @Controller
+@EnableAspectJAutoProxy  // AOP(Aspect Oriented Programming)를 사용하기 위한 용도
 public class CartController {
 	
 	@Autowired  
@@ -33,10 +38,23 @@ public class CartController {
 	
 	// 장바구니 보기
 	@GetMapping("/shop/cartList.up")
-	public ModelAndView requiredLogin_cartList(HttpServletRequest request,HttpServletResponse response,ModelAndView mav) {
+	public ModelAndView cartList(HttpServletRequest request,HttpServletResponse response,ModelAndView mav) {
 		
 		HttpSession session = request.getSession();
+		
 		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+		
+	 	if(loginuser == null) {
+	 		String message = "먼저 로그인 하세요~~";
+	 		String loc = request.getContextPath()+"/index.up";
+	 		
+	 		mav.addObject("message", message);
+	 		mav.addObject("loc", loc);
+	 		
+	 		mav.setViewName("msg");
+	 		
+	 		return mav;
+	 	}
 		
 		List<CartVO> cartList = service.selectProductCart(loginuser.getUserid());
 		
@@ -58,12 +76,22 @@ public class CartController {
 	@RequestMapping("/shop/cartAdd.up")
 	public ModelAndView requiredLogin_cartAdd(HttpServletRequest request,HttpServletResponse response,ModelAndView mav) {	
 		
+		HttpSession session = request.getSession();
 		
-		// 로그인을 한 상태이라면
-		// 장바구니 테이블(tbl_cart)에 해당 제품을 담아야 한다.
-		// 장바구니 테이블에 해당 제품이 존재하지 않는 경우에는 tbl_cart 테이블에 insert 를 해야하고, 
-        // 장바구니 테이블에 해당 제품이 존재하는 경우에는 또 그 제품을 추가해서 장바구니 담기를 한다라면 tbl_cart 테이블에 update 를 해야한다.
+		MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
 		
+	 	if(loginuser == null) {
+	 		String message = "먼저 로그인 하세요~~";
+	 		String loc = request.getContextPath()+"/index.up";
+	 		
+	 		mav.addObject("message", message);
+	 		mav.addObject("loc", loc);
+	 		
+	 		mav.setViewName("msg");
+	 		
+	 		return mav;
+	 	}
+	 	
 		String method = request.getMethod();
 		
 		if("POST".equalsIgnoreCase(method)) {
@@ -72,9 +100,7 @@ public class CartController {
 			String oqty = request.getParameter("oqty"); // 주문량
 			String pnum = request.getParameter("pnum"); // 제품번호
 			
-			HttpSession session = request.getSession();// 사용자ID 
 			
-			MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
 			String userid = loginuser.getUserid();
 			
 			
@@ -100,7 +126,7 @@ public class CartController {
 				
 			}
 			// super.setRedirect(false);   
-              mav.setViewName("/WEB-INF/msg.jsp");
+              mav.setViewName("msg");
 		}
 		else {
 			
@@ -112,7 +138,7 @@ public class CartController {
               mav.addObject("loc", loc);
               
               //  super.setRedirect(false);   
-              mav.setViewName("/WEB-INF/msg.jsp");
+              mav.setViewName("msㅎ");
 		}
 	
 	
@@ -122,8 +148,10 @@ public class CartController {
 	@ResponseBody
 	@RequestMapping(value="/shop/cartEdit.up", produces="text/plain;charset=UTF-8")
 	public String requiredLogin_cartEdit(HttpServletRequest request,HttpServletResponse response) {	
+		
 		String method = request.getMethod();
 	      
+		
 		 JSONObject jsonObj = new JSONObject();
 		 
 	      if(!"POST".equalsIgnoreCase(method)) {
