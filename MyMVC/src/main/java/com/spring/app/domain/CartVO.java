@@ -1,10 +1,6 @@
 package com.spring.app.domain;
 
-import lombok.Getter;
-import lombok.Setter;
 
-@Setter
-@Getter
 public class CartVO { // (오라클로 말하면 제품테이블의 자식테이블)
 	
 	 private int cartno;        //  장바구니 번호             
@@ -28,6 +24,54 @@ public class CartVO { // (오라클로 말하면 제품테이블의 자식테이
 		this.registerday = registerday;
 	}
 
+	public int getCartno() {
+		return cartno;
+	}
+
+	public void setCartno(int cartno) {
+		this.cartno = cartno;
+	}
+
+	public String getFk_userid() {
+		return fk_userid;
+	}
+
+	public void setFk_userid(String fk_userid) {
+		this.fk_userid = fk_userid;
+	}
+
+	public int getFk_pnum() {
+		return fk_pnum;
+	}
+
+	public void setFk_pnum(int fk_pnum) {
+		this.fk_pnum = fk_pnum;
+	}
+
+	public int getOqty() {
+		return oqty;
+	}
+
+	public void setOqty(int oqty) {
+		this.oqty = oqty;
+	}
+
+	public String getRegisterday() {
+		return registerday;
+	}
+
+	public void setRegisterday(String registerday) {
+		this.registerday = registerday;
+	}
+	
+	public ProductVO getProd() {
+		return prod;
+	}
+
+	public void setProd(ProductVO prod) {
+		this.prod = prod;
+	}
+	
 	
 
 }

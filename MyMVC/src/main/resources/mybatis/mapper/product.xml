@@ -5,5 +5,102 @@
 
 <!-- ==== 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="product">
-
+	
+	
+	<!-- 제품의 스펙별(HIT, NEW, BEST) 상품의 전체개수를 알아오기 --> 
+	<select id="totalPspecCount" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_product
+		where fk_snum = #{fk_snum}
+	</select>
+	
+	
+	<!-- tbl_category 테이블에서 카테고리 대분류 번호(cnum), 카테고리코드(code), 카테고리명(cname)을 조회해오기  -->
+	<select id="getCategoryList" resultType="com.spring.app.domain.CategoryVO">
+		select cnum, code, cname
+		from tbl_category
+		order by cnum asc
+	</select>
+	
+	
+	<!-- 입력받은 cnum 이 DB 에 존재하는지 알아온다. (존재하지 않는 경우는 사용자가 장난친 경우) -->
+	<select id="isExist_cnum" parameterType="String" resultType="boolean">
+		select *
+		from tbl_category
+		where cnum = #{cnum}
+	</select>
+	
+	
+	<!-- 페이징 처리를 위한 특정 카테고리에 대한 총 페이지 수 알아오기 -->
+	<select id="getTotalPge" parameterType="String" resultType="int">
+		select ceil(count(*)/10)
+		from tbl_product
+		where fk_cnum = #{cnum}
+	</select>
+	
+	
+	<!-- 특정한 카테고리에서 사용자가 보고자 하는 특정 페이지번호에 해당하는 제품들을 조회해오기 -->
+	<select id="selectProductByCategory" parameterType="HashMap" resultType="com.spring.app.domain.ProductVO">
+		SELECT cname AS "categvo.cname", sname AS "spvo.sname", pnum, pname, pcompany, pimage1, pimage2, pqty, price, saleprice, pcontent, point, pinputdate
+		FROM
+		(
+		    SELECT row_number() over(order by pnum desc) AS RNO
+		         , C.cname, S.sname, pnum, pname, pcompany, pimage1, pimage2, pqty, price, saleprice, pcontent, point, pinputdate
+		    FROM
+		    (
+		    select pnum, pname, pcompany, pimage1, pimage2, pqty, price, saleprice, pcontent, point
+		         , to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate, fk_cnum, fk_snum
+		    from tbl_product
+		    where fk_cnum = #{cnum}
+		    ) P
+		    JOIN tbl_category C
+		    ON P.fk_cnum = C.cnum
+		    JOIN tbl_spec S
+		    ON P.fk_snum = S.snum
+		) V
+		WHERE V.RNO between ((#{currentShowPageNo} * 10) - 9) and (#{currentShowPageNo} * 10)
+	</select>
+	
+	
+	<!-- 더보기 방식(페이징처리)으로 상품정보를 8개씩 잘라서(start ~ end) 조회해오기 -->
+	<select id="selectBySpecName" parameterType="HashMap" resultType="com.spring.app.domain.ProductVO">
+		SELECT pnum, pname, cname AS "categvo.cname", pcompany, pimage1, pimage2, pqty, price, saleprice, sname AS "spvo.sname", pcontent, point, pinputdate
+		FROM
+		(
+		select row_number() over(order by pnum desc) AS RNO
+			 , pnum, pname, C.cname, pcompany, pimage1, pimage2, pqty, price, saleprice, S.sname, pcontent, point
+			 , to_char(pinputdate, 'yyyy-mm-dd') AS pinputdate
+		from tbl_product P
+		JOIN tbl_category C
+		ON P.fk_cnum = C.cnum
+		JOIN tbl_spec S
+		ON P.fk_snum = S.snum
+		where S.sname = #{sname}
+		) V
+		WHERE RNO between #{start} and #{end}
+	</select>
+	
+	
+	<!-- 제품번호를 가지고서 해당 제품의 정보를 조회해오기 -->
+	<select id="selectOneProduct" parameterType="String" resultType="com.spring.app.domain.ProductVO">
+		SELECT sname AS "spvo.snam", pnum, pname, pcompany, price, saleprice, point, pqty, pcontent, pimage1, pimage2, prdmanual_systemFileName, NVL(prdmanual_orginFileName, '없음') AS prdmanual_orginFileName
+		FROM
+		(
+		select fk_snum, pnum, pname, pcompany, price, saleprice, point, pqty, pcontent, pimage1, pimage2, prdmanual_systemFileName, prdmanual_orginFileName
+		from tbl_product
+		where pnum = #{pnum}
+		) P
+		JOIN tbl_spec S
+		ON P.fk_snum = S.snum
+	</select>
+	
+	
+	<!-- 제품번호를 가지고서 해당 제품의 추가된 이미지 정보를 조회해오기 -->
+	<select id="getImagesByPnum" parameterType="String" resultType="String">
+		select imgfilename
+		from tbl_product_imagefile
+		where fk_pnum = #{pnum}
+	</select>
+	
+	
 </mapper> 
