@@ -351,7 +351,7 @@
          			$("div.loader").show();// CSS 로딩화면 보여주기
          			
          			$.ajax({
-         				url:"<%=ctxPath%>/shop/orderAdd.up",
+         				url:"<%=ctxPath%>/order/orderAdd.up",
          				type:"post",
          				data:{"n_sum_totalPrice":n_sum_totalPrice,
          					  "n_sum_totalPoint":n_sum_totalPoint,
@@ -363,10 +363,10 @@
          				dataType:"json",
          				success:function(json){
          					if(json.isSuccess == 1) {
-                                location.href="<%=ctxPath%>/shop/orderList.up";
+                                location.href="<%=ctxPath%>/order/orderList.up";
                              }
                              else {
-                                location.href="<%=ctxPath%>/shop/orderError.up";
+                                location.href="<%=ctxPath%>/order/orderError.up";
                              }
          					
          				},
