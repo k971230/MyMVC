@@ -722,7 +722,7 @@
 					$("div.loader").show(); // CSS 로딩화면 보여주기
 					
 					$.ajax({
-						url:"<%= ctxPath%>/shop/orderAdd.up",
+						url:"<%= ctxPath%>/order/orderAdd.up",
 						type:"post",
 						data:{"n_sum_totalPrice":Number("${requestScope.pvo.saleprice}")*Number($("input#spinner").val()),
 	        				  "n_sum_totalPoint":Number("${requestScope.pvo.point}")*Number($("input#spinner").val()),
@@ -733,10 +733,10 @@
 						dataType:"json",
 						success:function(json){ // json ==> {"isSuccess":1} 또는 {"isSuccess":0}
 	        				if(json.isSuccess == 1) {
-	                            location.href="<%= ctxPath%>/shop/orderList.up";
+	                            location.href="<%= ctxPath%>/order/orderList.up";
 	                        }
 	                        else {
-	                           location.href="<%= ctxPath%>/shop/orderError.up";
+	                           location.href="<%= ctxPath%>/order/orderError.up";
 	                        }
 						},
 						error: function(request, status, error){
