@@ -11,11 +11,13 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.domain.CategoryVO;
 import com.spring.app.domain.ProductVO;
+import com.spring.app.domain.PurchaseReviewsVO;
 import com.spring.app.myshop.service.ProductService;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -382,6 +384,90 @@ public class MyshopController {
 		
 		return mav;
 	}
+	
+	@ResponseBody
+	@PostMapping(value="/shop/reviewRegister.up", produces="text/plain;charset=UTF-8")
+	public String reviewRegister(HttpServletRequest request) throws Exception {
+		
+		String contents = request.getParameter("contents");
+		String fk_userid = request.getParameter("fk_userid");
+		String fk_pnum = request.getParameter("fk_pnum");
+		
+		// **** 크로스 사이트 스크립트 공격에 대응하는 안전한 코드(시큐어 코드) 작성하기 **** // 
+		contents = contents.replaceAll("<", "&lt;");
+		contents = contents.replaceAll(">", "&gt;");
+		
+		// 입력한 내용에서 엔터는 <br>로 변환시키기
+		contents = contents.replaceAll("\r\n", "<br>");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		
+		paraMap.put("contents", contents);
+		paraMap.put("fk_userid", fk_userid);
+		paraMap.put("fk_pnum", fk_pnum);
+		
+		int i = productservice.addReview(paraMap);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("i", i);
+		
+		String json = jsonObj.toString();
+		
+		return json.toString();
+	
+	}
+	
+	@ResponseBody
+	@GetMapping(value="/shop/reviewList.up", produces="text/plain;charset=UTF-8")
+	public String reviewList(HttpServletRequest request) throws Exception {
+		
+		String fk_pnum = request.getParameter("fk_pnum"); // 제품번호
+		
+		List<PurchaseReviewsVO> reviewList = productservice.reviewList(fk_pnum);
+		
+		JSONArray jsArr = new JSONArray(); // []
+		
+		if(reviewList.size() > 0) {
+			for(PurchaseReviewsVO reviewsvo : reviewList) {
+				
+				JSONObject jsobj = new JSONObject();                
+				jsobj.put("contents", reviewsvo.getContents());     
+				jsobj.put("name", reviewsvo.getMvo().getName());    
+				jsobj.put("writeDate", reviewsvo.getWriteDate());   
+				jsobj.put("userid", reviewsvo.getFk_userid());      
+				jsobj.put("review_seq", reviewsvo.getReview_seq()); 
+				
+				jsArr.put(jsobj);
+
+			}// end of for----------------------
+		}
+		
+		String json = jsArr.toString(); 
+			
+		return json;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 }

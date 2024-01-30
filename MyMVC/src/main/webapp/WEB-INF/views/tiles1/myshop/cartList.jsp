@@ -10,7 +10,7 @@
 %>
 
 
- <script type="text/javascript" src="<%= ctxPath%>/js/myshop/categoryListJSON.js"></script>    
+<script type="text/javascript" src="<%= ctxPath%>/js/myshop/categoryListJSON.js"></script>    
 <style type="text/css" >
    table#tblCartList {width: 90%;
                       border: solid gray 1px;

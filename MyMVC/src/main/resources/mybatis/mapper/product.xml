@@ -103,4 +103,19 @@
 	</select>
 	
 	
+	<insert id="addReview" parameterType="HashMap">
+	 	insert into tbl_purchase_reviews(review_seq, fk_userid, fk_pnum, contents, writeDate)
+		values(seq_purchase_reviews.nextval, #{fk_userid}, #{fk_pnum}, #{contents}, default) 
+ 	</insert>
+ 	
+ 	<!-- 더보기 방식(페이징처리)으로 상품정보를 8개씩 잘라서(start ~ end) 조회해오기 -->
+	<select id="reviewList" parameterType="String" resultType="com.spring.app.domain.PurchaseReviewsVO">
+		select review_seq, fk_userid, name, fk_pnum, contents, to_char(writeDate, 'yyyy-mm-dd hh24:mi:ss') AS writeDate
+		from tbl_purchase_reviews R join tbl_member M
+		on R.fk_userid = M.userid 
+		where R.fk_pnum = #{fk_pnum}
+		order by review_seq desc 
+	</select>
+	
+	
 </mapper> 

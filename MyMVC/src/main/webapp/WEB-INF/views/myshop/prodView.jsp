@@ -371,11 +371,11 @@
 	                     {"n":1} 또는 {"n":-1} 또는 {"n":0}
 	                  */
 	                  
-	                  if(json.n == 1) {
+	                  if(json.i == 1) {
 	                     // 제품후기 등록(insert)이 성공했으므로 제품후기글을 새로이 보여줘야(select) 한다.
 						 goReviewListView(); // 제품후기글을 보여주는 함수 호출하기 
 	                  }
-	                  else if(json.n == -1)  {
+	                  else if(json.i == -1)  {
 	                  // 동일한 제품에 대하여 동일한 회원이 제품후기를 2번 쓰려고 경우 unique 제약에 위배됨 
 	                  // alert("이미 후기를 작성하셨습니다.\n작성하시려면 기존의 제품후기를\n삭제하시고 다시 쓰세요.");
 	                     swal("이미 후기를 작성하셨습니다.\n작성하시려면 기존의 제품후기를\n삭제하시고 다시 쓰세요.");
@@ -931,6 +931,9 @@
    
    </div>
    
+   
+   <%-- 내가 할 부분 --%>
+   
    <div class="text-left">
 	    <p class="h4 text-muted">${requestScope.pvo.pname} 제품 사용후기</p>
 	    
@@ -951,6 +954,8 @@
           <button type="button" class="btn btn-outline-secondary w-100 h-100" id="btnCommentOK" style="margin: auto;"><span class="h5">후기등록</span></button>
        </div>
     </div>
+   
+   <%-- 내가 할 부분 --%>
    
 </div>
 

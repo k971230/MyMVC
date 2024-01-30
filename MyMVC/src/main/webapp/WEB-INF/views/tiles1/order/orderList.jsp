@@ -45,7 +45,7 @@
    /* 모달관련 CSS 끝 */
 </style>
 
-<script type="text/javascript">
+<script type="text/javascript"> 
 
    $(document).ready(function(){
       

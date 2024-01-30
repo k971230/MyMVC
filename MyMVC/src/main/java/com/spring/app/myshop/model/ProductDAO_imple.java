@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.spring.app.domain.CategoryVO;
 import com.spring.app.domain.ImageVO;
 import com.spring.app.domain.ProductVO;
+import com.spring.app.domain.PurchaseReviewsVO;
 import com.spring.app.myshop.service.ProductService;
 
 @Repository 
@@ -105,6 +106,22 @@ public class ProductDAO_imple implements ProductDAO {
 		List<String> imgList = sqlsession.selectList("product.getImagesByPnum", pnum);
 		
 		return imgList;
+	}
+
+
+	@Override
+	public int addReview(Map<String, String> paraMap) {
+		
+		int n = sqlsession.insert("product.addReview", paraMap);
+		
+		return n;
+	}
+
+	
+	@Override
+	public List<PurchaseReviewsVO> reviewList(String fk_pnum) {
+		List<PurchaseReviewsVO> reviewList = sqlsession.selectList("product.reviewList", fk_pnum);
+		return reviewList;
 	}
 
 

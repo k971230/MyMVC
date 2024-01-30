@@ -5,6 +5,7 @@ import java.util.*;
 import com.spring.app.domain.CategoryVO;
 import com.spring.app.domain.ImageVO;
 import com.spring.app.domain.ProductVO;
+import com.spring.app.domain.PurchaseReviewsVO;
 
 public interface ProductDAO {
 	
@@ -34,6 +35,10 @@ public interface ProductDAO {
 
 	// 제품번호를 가지고서 해당 제품의 추가된 이미지 정보를 조회해오기
 	List<String> getImagesByPnum(String pnum);
+
+	int addReview(Map<String, String> paraMap);
+
+	List<PurchaseReviewsVO> reviewList(String fk_pnum);
 
 
 

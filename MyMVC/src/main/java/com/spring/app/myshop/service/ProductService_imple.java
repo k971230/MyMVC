@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.spring.app.domain.CategoryVO;
 import com.spring.app.domain.ImageVO;
 import com.spring.app.domain.ProductVO;
+import com.spring.app.domain.PurchaseReviewsVO;
 import com.spring.app.myshop.model.ProductDAO;
 
 
@@ -96,6 +97,20 @@ public class ProductService_imple implements ProductService {
 		List<String> imgList = pdao.getImagesByPnum(pnum);
 		
 		return imgList;
+	}
+
+	@Override
+	public int addReview(Map<String, String> paraMap) {
+		int i = pdao.addReview(paraMap);
+		
+		return i;
+	}
+
+	@Override
+	public List<PurchaseReviewsVO> reviewList(String fk_pnum) {
+		List<PurchaseReviewsVO> reviewList = pdao.reviewList(fk_pnum);
+		
+		return reviewList;
 	}
 
 	
