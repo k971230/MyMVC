@@ -40,8 +40,6 @@ public class AdminService_imple implements AdminService {
 		String searchType = paraMap.get("searchType");
 		String searchWord = paraMap.get("searchWord");
 		
-		
-		
 		if("email".equals(searchType)) {
 			// 검색대상이 email 인경우
 			try {
@@ -53,7 +51,6 @@ public class AdminService_imple implements AdminService {
 			} catch (GeneralSecurityException e) {
 				e.printStackTrace();
 			}
-			
 		}
 		// 검색이 있다면
 		if( (searchType != null && !searchType.trim().isEmpty()) &&
@@ -61,6 +58,19 @@ public class AdminService_imple implements AdminService {
 			
 		}
 		List<MemberVO> select_Member_paging = dao.select_Member_paging(paraMap);
+		System.out.println("select_Member_paging => " + select_Member_paging);
+		for(MemberVO member : select_Member_paging) {
+			try {
+				String email = AES256.decrypt(member.getEmail());
+				member.setEmail(email);
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+		}
 		return select_Member_paging;
 	}
 

@@ -1,7 +1,6 @@
 package com.spring.app.domain;
 
-
-
+import org.springframework.web.multipart.MultipartFile;
 
 public class ProductVO {
 
@@ -31,6 +30,10 @@ public class ProductVO {
 	private int totalPrice;         // 판매당시의 제품판매가 * 주문량
 	private int totalPoint;         // 판매당시의 포인트점수 * 주문량 
 		
+	private MultipartFile attach;
+	private String fileName;    // WAS(톰캣)에 저장될 파일명(2023112409291535243254235235234.png) 
+	private String orgFilename; // 진짜 파일명(강아지.png)  // 사용자가 파일을 업로드 하거나 파일을 다운로드 할때 사용되어지는 파일명  
+	private String fileSize;    // 파일크기 
 	
 	public ProductVO() { }
 	
@@ -223,6 +226,39 @@ public class ProductVO {
 	public void setTotalPoint(int totalPoint) {
 		this.totalPoint = totalPoint;
 	}
+
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getOrgFilename() {
+		return orgFilename;
+	}
+
+	public void setOrgFilename(String orgFilename) {
+		this.orgFilename = orgFilename;
+	}
+
+	public String getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
+	}
+	
 	
 	
 	

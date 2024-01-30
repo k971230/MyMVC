@@ -1,7 +1,11 @@
 package com.spring.app.admin.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -21,10 +25,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import com.spring.app.admin.service.AdminService;
 import com.spring.app.common.AES256;
+import com.spring.app.common.FileManager;
 import com.spring.app.common.MyUtil;
 import com.spring.app.common.Sha256;
 import com.spring.app.domain.CategoryVO;
 import com.spring.app.domain.MemberVO;
+import com.spring.app.domain.ProductVO;
 import com.spring.app.domain.SpecVO;
 
 
@@ -38,6 +44,9 @@ public class AdminController {
 	
 	@Autowired
 	private AES256 AES256;
+	
+	@Autowired
+    private FileManager fileManager;
 
 	@GetMapping(value="/admin/memberList.up")
 	public ModelAndView memberList(ModelAndView mav, HttpServletRequest request) {
@@ -64,8 +73,6 @@ public class AdminController {
 				}
 			}
 			
-			
-		
 			if(searchType == null ||
 			   (!"name".equals(searchType) &&
 				!"userid".equals(searchType) &&
@@ -88,7 +95,6 @@ public class AdminController {
 			if(currentShowPageNo == null) {
 				currentShowPageNo = "1";
 			}
-			
 			
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("searchType", searchType);
@@ -164,17 +170,13 @@ public class AdminController {
 			// *** ====== 현재 페이지를 돌아갈 페이지(goBackURL)로 주소 지정하기 ====== *** //
 			String currentURL = MyUtil.getCurrentURL(request);
 			// 회원조회를 했을 시 현재 그 페이지로 그대로 되돌아가기 위한 용도로 쓰임
-			
+			/*
 			System.out.println("~~~~ 확인용 searchType : " + searchType);
 			System.out.println("~~~~ 확인용 searchWord : " + searchWord);
 			System.out.println("~~~~ 확인용 sizePerPage : " + sizePerPage);
 			System.out.println("~~~~ 확인용 currentShowPageNo : " + currentShowPageNo);
+			*/
 			List<MemberVO> memberList = service.select_Member_paging(paraMap);
-			
-			if(memberList.isEmpty() ) {
-				System.out.println("memberList null 임");
-			}
-			
 			
 			mav.addObject("memberList", memberList);
 			mav.addObject("searchType", searchType);
@@ -253,7 +255,7 @@ public class AdminController {
 	
 	
 	@RequestMapping(value="/admin/productRegister.up")
-	public ModelAndView productRegister(ModelAndView mav, HttpServletRequest request, MultipartHttpServletRequest mrequest) {
+	public ModelAndView productRegister(ModelAndView mav, HttpServletRequest request, MultipartFile file, ProductVO ProductVO) {
 		
 		// == 관리자(admin)로 로그인 했을 때만 제품등록이 가능하도록 한다. == //
 		HttpSession session = request.getSession();
@@ -279,47 +281,62 @@ public class AdminController {
 				mav.setViewName("tiles1.admin.productRegister");
 			}
 			else { // "POST" 라면  
+				MultipartFile attach = ProductVO.getAttach();
+				String root = session.getServletContext().getRealPath("/");
+				System.out.println("확인용 webapp 의 절대 경로 : "+ root);
+				// 확인용 webapp 의 절대 경로 : /Users/sub/workspace_spring_framework/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/board/
+
+				String path = root + "resources" + File.separator+"files";
+				System.out.println("확인용 path : "+ path);
 				
-				// 새로운 제품 등록시 form 태그에서 입력한 값들을 얻어오기
-				MultipartRequest mtrequest = null;
+				String newFileName = "";
+				// WAS(톰캣)의 디스크에 저장될 파일명 
 				
-				// 1. 첨부되어진 파일을 디스크의 어느 경로에 업로드 할 것인지 그 경로를 설정해야 한다.
-				ServletContext svlCtx = session.getServletContext();
-				String uploadFileDir = "C:\\git\\MyMVC\\MyMVC\\src\\main\\resources\\static\\images";
+				byte[] bytes = null;
+				// 첨부파일의 내용물을 담는 것
 				
-				System.out.println("=== 첨부되어지는 이미지 파일이 올라가는 절대경로 uploadFileDir ==> " + uploadFileDir);
+				long fileSize = 0;
+				// 첨부파일의 크기 
 				
-			/*
-	             MultipartRequest의 객체가 생성됨과 동시에 파일 업로드가 이루어 진다.
-	                   
-	             MultipartRequest(HttpServletRequest request,
-	                              String saveDirectory, -- 파일이 저장될 경로
-	                              int maxPostSize,      -- 업로드할 파일 1개의 최대 크기(byte)
-	                              String encoding,
-	                              FileRenamePolicy policy) -- 중복된 파일명이 올라갈 경우 파일명다음에 자동으로 숫자가 붙어서 올라간다.   
-	                  
-	             파일을 저장할 디렉토리를 지정할 수 있으며, 업로드제한 용량을 설정할 수 있다.(바이트단위). 
-	             이때 업로드 제한 용량을 넘어서 업로드를 시도하면 IOException 발생된다. 
-	             또한 국제화 지원을 위한 인코딩 방식을 지정할 수 있으며, 중복 파일 처리 인터페이스를사용할 수 있다.
-	                        
-	             이때 업로드 파일 크기의 최대크기를 초과하는 경우이라면 
-	             IOException 이 발생된다.
-	             그러므로 Exception 처리를 해주어야 한다.                
-	        */
-//				=== 파일을 업로드 해준다. ===
+				
 				try {
-					mtrequest = new MultipartRequest(request, uploadFileDir, 10*1024*1024, "UTF-8", new DefaultFileRenamePolicy());  
-				} catch (IOException e) {
-					System.out.println("~~~ 파일업로드 실패 에러메시지 ==> " + e.getMessage());
-					// ~~~ 파일업로드 실패 에러메시지 ==> Posted content length of 178143886 exceeds limit of 10485760
+					bytes = attach.getBytes();
+					// 첨부파일의 내용물을 읽어오는 것
 					
-					request.setAttribute("message", "업로드 되어질 경로가 잘못되었거나 또는 최대용량 10MB를 초과했으므로 파일업로드 실패함!!");
-					request.setAttribute("loc", request.getContextPath()+"/admin/productRegister.up");
+					String originalFilename = attach.getOriginalFilename();
+					// attach.getOriginalFilename() 이 첨부파일명의 파일명(예: 강아지.png) 이다.
 					
-					mav.setViewName("tiles1.admin.productRegister");
+					System.out.println("~~~ 확인용 originalFilename => " + originalFilename); 
+					// ~~~ 확인용 originalFilename => LG_싸이킹청소기_사용설명서.pdf 
+					
+					newFileName = fileManager.doFileUpload(bytes, originalFilename, path); 
+					// 첨부되어진 파일을 업로드 하는 것이다.
+					
+					System.out.println("~~~ 확인용 newFileName => " + newFileName); 
+					// ~~~ 확인용 newFileName => 20231124113600755016855987700.pdf 
+					
+				
+				/*
+				    3. BoardVO boardvo 에 fileName 값과 orgFilename 값과 fileSize 값을 넣어주기  
+				*/
+					ProductVO.setFileName(newFileName);
+					// WAS(톰캣)에 저장된 파일명(20231124113600755016855987700.pdf)
+					
+					ProductVO.setOrgFilename(originalFilename);
+					// 게시판 페이지에서 첨부된 파일(LG_싸이킹청소기_사용설명서.pdf)을 보여줄 때 사용.
+					// 또한 사용자가 파일을 다운로드 할때 사용되어지는 파일명으로 사용.
+					
+					fileSize = attach.getSize();  // 첨부파일의 크기(단위는 byte임) 
+					ProductVO.setFileSize(String.valueOf(fileSize));
+					
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				
+				
 			}
+				
+			
 		}
 		mav.setViewName("tiles1.admin.productRegister");
 		return mav;
