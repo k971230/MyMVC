@@ -30,15 +30,14 @@ public class AdminDAO_imple implements AdminDAO {
 	@Override
 	public List<MemberVO> select_Member_paging(Map<String, String> paraMap) {
 		
+		String current = paraMap.get("currentShowPageNo");
+		System.out.println("curren => "+current);
+		
+		String sizePerPage = paraMap.get("sizePerPage");
+		System.out.println("sizePerPage => "+sizePerPage);
+		
 		List<MemberVO> select_Member_paging = sqlsession.selectList("admin.select_Member_paging", paraMap);
 		return select_Member_paging;
-	}
-
-	// 검색이 있는 회원목록
-	@Override
-	public List<MemberVO> searchMemberList(Map<String, String> paraMap) {
-		List<MemberVO> searchMemberList = sqlsession.selectList("admin.searchMemberList", paraMap);
-		return searchMemberList;
 	}
 
 	// 회원 상세

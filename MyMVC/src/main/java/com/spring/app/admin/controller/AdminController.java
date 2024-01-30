@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import com.spring.app.admin.service.AdminService;
 import com.spring.app.common.AES256;
 import com.spring.app.common.MyUtil;
@@ -137,6 +138,8 @@ public class AdminController {
 				
 				if(pageNo == Integer.parseInt(currentShowPageNo)) {
 					pageBar += "<li class='page-item active'><a class='page-link' href='#'>"+pageNo+"</a></li>";
+					System.out.println("pageBar =" + pageBar);
+					System.out.println("pageNo =" + pageNo);
 				}
 				else {
 					pageBar += "<li class='page-item'><a class='page-link' href='memberList.up?searchType="+searchType+"&searchWord="+searchWord+"&sizePerPage="+sizePerPage+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
@@ -164,33 +167,23 @@ public class AdminController {
 			String currentURL = MyUtil.getCurrentURL(request);
 			// 회원조회를 했을 시 현재 그 페이지로 그대로 되돌아가기 위한 용도로 쓰임
 			
-			// 검색이 없는 회원목록
-			
 			List<MemberVO> memberList = service.select_Member_paging(paraMap);
-			
+			System.out.println("memberList=> " + memberList);
 			request.setAttribute("memberList", memberList);
 			request.setAttribute("searchType", searchType);
 			request.setAttribute("searchWord", searchWord);
 			request.setAttribute("sizePerPage", sizePerPage);
 			request.setAttribute("pageBar", pageBar);
 			request.setAttribute("currentURL", currentURL);
-			System.out.println("검색없음");
-		
-			if(searchWord != "") {
-				// 검색이 있는 회원목록
-				List<MemberVO> searchMemberList = service.searchMemberList(paraMap);
-				
-				request.setAttribute("memberList", searchMemberList);
-				request.setAttribute("searchType", searchType);
-				request.setAttribute("searchWord", searchWord);
-				request.setAttribute("sizePerPage", sizePerPage);
-				request.setAttribute("pageBar", pageBar);
-				request.setAttribute("currentURL", currentURL);
-				System.out.println("검색있음");
-			}
-			
 		}
-		
+		else {
+			// 로그인을 안한 경우 또는 일반사용자로 로그인 한 경우 
+			String message = "관리자만 접근이 가능합니다.";
+			String loc = "javascript:history.back()";
+			
+			request.setAttribute("message", message);
+			request.setAttribute("loc", loc);
+		}
 		mav.setViewName("tiles1.admin.memberList");
 		return mav;
 	}
@@ -217,8 +210,10 @@ public class AdminController {
 			
 			System.out.println("email => " +mvo.getEmail());
 			String email = mvo.getEmail();
+			String mobile = mvo.getMobile();
 			try {
-				AES256.decrypt(email);
+				mvo.setEmail(AES256.decrypt(email));
+				mvo.setMobile(AES256.decrypt(mobile));
 			} catch (NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
@@ -226,11 +221,6 @@ public class AdminController {
 			} catch (GeneralSecurityException e) {
 				e.printStackTrace();
 			}
-			System.out.println("복호화 email => " +email);
-			System.out.println("mobile => " +mvo.getMobile());
-			String mobile = mvo.getMobile();
-			
-			// 복호화 왜 안되냐고!!!!!!!!!!!!!!!!!!
 			
 			System.out.println("mvo => " + mvo);
 			

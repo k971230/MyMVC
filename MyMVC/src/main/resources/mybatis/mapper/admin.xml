@@ -10,17 +10,14 @@
 		select ceil(count(*)/#{sizePerPage})
         from tbl_member
    	    where userid != 'admin'
-   	   	and #{searchType} like '%' || #{searchWord} || '%'
+   	    <if test="searchType != ''">
+   	    	and #{searchType} like '%' || #{searchWord} || '%'
+   	    </if>
+   	   	
 	</select>
 	
-	<!-- 검색이 없는 회원목록 -->
-	<resultMap type="HashMap" id="select_Member_paging_Map">
-		<result property="userid" 	column="userid" 	javaType="String"/>
-		<result property="name" 	column="name" 	javaType="String"/>
-		<result property="email" 	column="email" 	javaType="String"/>
-		<result property="gender" 	column="gender" 	javaType="String"/>
-	</resultMap>
-	<select id="select_Member_paging" parameterType="HashMap" resultMap="select_Member_paging_Map">
+	<!-- 검색한거 회원목록 -->
+	<select id="select_Member_paging" parameterType="HashMap" resultType="com.spring.app.domain.MemberVO">
 		SELECT userid, name, email, gender
 	    FROM 
 	    ( 
@@ -30,30 +27,9 @@
 	   	select userid, name, email, gender 
 	   	from tbl_member
 	   	where userid != 'admin'
-	   	order by registerday desc
-	   	) V
-	   	) T
-	   	WHERE RNO BETWEEN (#{currentShowPageNo} * #{sizePerPage}) - (#{sizePerPage} - 1) AND (#{currentShowPageNo} * #{sizePerPage})
-	</select>
-	
-	<!-- 검색이 있는 회원목록 -->
-	<resultMap type="HashMap" id="searchMemberList_Map">
-		<result property="userid" 	column="userid" 	javaType="String"/>
-		<result property="name" 	column="name" 	javaType="String"/>
-		<result property="email" 	column="email" 	javaType="String"/>
-		<result property="gender" 	column="gender" 	javaType="String"/>
-	</resultMap>
-	<select id="searchMemberList" parameterType="HashMap" resultMap="searchMemberList_Map">
-		SELECT userid, name, email, gender
-	    FROM 
-	    ( 
-	    	SELECT rownum AS RNO, userid, name, email, gender 
-	   		FROM 
-	   	( 
-	   	select userid, name, email, gender 
-	   	from tbl_member
-	   	where userid != 'admin'
-	   	and #{searchType} like '%' || #{searchWord} || '%'
+	   	<if test="searchType != '' and searchWord != ''">
+	   		and #{searchType} like '%'|| #{searchWord} ||'%' 
+	   	</if>
 	   	order by registerday desc
 	   	) V
 	   	) T
