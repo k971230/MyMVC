@@ -108,13 +108,66 @@
 		values(seq_purchase_reviews.nextval, #{fk_userid}, #{fk_pnum}, #{contents}, default) 
  	</insert>
  	
- 	<!-- 더보기 방식(페이징처리)으로 상품정보를 8개씩 잘라서(start ~ end) 조회해오기 -->
+ 	
 	<select id="reviewList" parameterType="String" resultType="com.spring.app.domain.PurchaseReviewsVO">
 		select review_seq, fk_userid, name, fk_pnum, contents, to_char(writeDate, 'yyyy-mm-dd hh24:mi:ss') AS writeDate
 		from tbl_purchase_reviews R join tbl_member M
 		on R.fk_userid = M.userid 
 		where R.fk_pnum = #{fk_pnum}
 		order by review_seq desc 
+	</select>
+	
+	<select id="isOrderCheck" parameterType="HashMap" resultType="int">
+		select count(*) 
+        from tbl_orderdetail D JOIN tbl_order O 
+        on D.fk_odrcode = O.odrcode 
+        where D.fk_pnum = #{fk_pnum} and O.fk_userid = #{fk_userid}
+	</select>
+	
+	<delete id="reviewDel" parameterType="String">
+		delete from tbl_purchase_reviews 
+		where review_seq = #{review_seq}
+	</delete>
+	
+	<update id="reviewUpdate" parameterType="HashMap">
+		update tbl_purchase_reviews set contents = #{contents} 
+		, writeDate = sysdate 
+		where review_seq = #{review_seq} 
+	</update>
+	
+	<insert id="likeAdd" parameterType="HashMap">
+		insert into tbl_product_like(fk_userid, fk_pnum)
+	    values(#{userid} , #{pnum}) 
+	</insert>
+	
+	<delete id="delAdd" parameterType="HashMap">
+		delete from tbl_product_dislike 
+	    where fk_userid = #{userid} and fk_pnum = #{pnum} 
+	</delete>
+	
+	<delete id="likedisAdd" parameterType="HashMap">
+		 delete from tbl_product_like  
+		 where fk_userid = #{userid} and fk_pnum = #{pnum} 
+	</delete>
+	
+	<insert id="deldisAdd" parameterType="HashMap">
+		insert into tbl_product_dislike(fk_userid, fk_pnum) 
+		values(#{userid}, #{pnum}) 
+	</insert>
+	
+	
+	<resultMap type="HashMap" id="getLikeDislikeCnt_Map">
+       <result property="likecnt"     column="LIKECNT"      		javaType="int" />
+       <result property="dislikecnt"  column="DISLIKECNT"           javaType="int" />
+    </resultMap>
+	<select id="getLikeDislikeCnt" parameterType="HashMap" resultMap="getLikeDislikeCnt_Map">
+		select ( select count(*) 
+		from tbl_product_like 
+		where fk_pnum = #{pnum} ) AS LIKECNT 
+		, ( select count(*) 
+		from tbl_product_dislike 
+		where fk_pnum = #{pnum} ) AS DISLIKECNT 
+		from dual 
 	</select>
 	
 	

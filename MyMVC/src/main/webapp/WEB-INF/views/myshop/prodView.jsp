@@ -175,6 +175,7 @@
 
 <script type="text/javascript">
 
+   let check = '0';
    let isOrderOK = false;
    // 로그인한 사용자가 해당 제품을 구매한 상태인지 구매하지 않은 상태인지 알아오는 용도.
    // isOrderOK 값이 true 이면   로그인한 사용자가 해당 제품을 구매한 상태이고,
@@ -268,29 +269,33 @@
      
       /////////////////////////////////////////////////////////////////////////
       // === 로그인한 사용자가 해당 제품을 구매한 상태인지 구매하지 않은 상태인지 먼저 알아온다 === // 
-     $.ajax({
-           url:"<%= ctxPath%>/shop/isOrder.up",
-            type:"GET",
-            data:{"fk_pnum":"${requestScope.pvo.pnum}"
-               ,"fk_userid":"${sessionScope.loginuser.userid}"},
-            dataType:"JSON",
-         
-            async:false,   // 동기처리
-         // async:true,    // 비동기처리(기본값임) 
-         
-            success:function(json){
-            //	console.log("~~ 확인용 : ", JSON.stringify(json) );
-            	// ~~ 확인용 : {"isOrder":true}   해당 제품을 구매한 경우
-            	// ~~ 확인용 : {"isOrder":false}  해당 제품을 구매하지 않은 경우
-            	
-               isOrderOK = json.isOrder; 
-               // json.isOrder 값이 true  이면 로그인한 사용자가 해당 제품을 구매한 경우이고
-               // json.isOrder 값이 false 이면 로그인한 사용자가 해당 제품을 구매하지 않은 경우이다.
-            },
-            error: function(request, status, error){
-               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-            }
-     });
+     
+      
+      if ('${sessionScope.loginuser.userid}' != ''){
+	      $.ajax({
+	           url:"<%= ctxPath%>/shop/isOrder.up",
+	            type:"GET",
+	            data:{"fk_pnum":"${requestScope.pvo.pnum}"
+	               ,"fk_userid":"${sessionScope.loginuser.userid}"},
+	            dataType:"JSON",
+	         
+	         // async:false,   // 동기처리
+	         // async:true,    // 비동기처리(기본값임) 
+	         
+	            success:function(json){
+	            //	console.log("~~ 확인용 : ", JSON.stringify(json) );
+	            	// ~~ 확인용 : {"isOrder":true}   해당 제품을 구매한 경우
+	            	// ~~ 확인용 : {"isOrder":false}  해당 제품을 구매하지 않은 경우
+	            	
+	               isOrderOK = json.isOrder; 
+	               // json.isOrder 값이 true  이면 로그인한 사용자가 해당 제품을 구매한 경우이고
+	               // json.isOrder 값이 false 이면 로그인한 사용자가 해당 제품을 구매하지 않은 경우이다.
+	            },
+	            error: function(request, status, error){
+	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	            }
+	     });
+      }
      //////////////////////////////////////////////////////////////////////////
      
      
@@ -360,37 +365,74 @@
 	            "fk_pnum":$(input[name='fk_pnum']).val()}
         	*/
 			
-			$.ajax({
-	               url:"<%= ctxPath%>/shop/reviewRegister.up",
-	               type:"POST",
-	               data:queryString,
-	               dataType:"JSON",
-	               success:function(json){ 
-	                  console.log(JSON.stringify(json));
-	                  /*
-	                     {"n":1} 또는 {"n":-1} 또는 {"n":0}
-	                  */
-	                  
-	                  if(json.i == 1) {
-	                     // 제품후기 등록(insert)이 성공했으므로 제품후기글을 새로이 보여줘야(select) 한다.
-						 goReviewListView(); // 제품후기글을 보여주는 함수 호출하기 
-	                  }
-	                  else if(json.i == -1)  {
-	                  // 동일한 제품에 대하여 동일한 회원이 제품후기를 2번 쓰려고 경우 unique 제약에 위배됨 
-	                  // alert("이미 후기를 작성하셨습니다.\n작성하시려면 기존의 제품후기를\n삭제하시고 다시 쓰세요.");
-	                     swal("이미 후기를 작성하셨습니다.\n작성하시려면 기존의 제품후기를\n삭제하시고 다시 쓰세요.");
-	                  }
-	                  else  {
-	                     // 제품후기 등록(insert)이 실패한 경우 
-	                     alert("제품후기 글쓰기가 실패했습니다.");
-	                  }
-	                  
-	                  $("textarea[name='contents']").val("").focus();
-	               },
-	               error: function(request, status, error){
-	                  alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	               }
-	            });
+        	
+        	// HTML 코드에서 요소를 선택합니다.
+        	var elements = document.getElementsByClassName('customDisplay namecheck');
+
+        	// 선택된 요소의 갯수를 확인합니다.
+        	var numberOfElements = elements.length;
+
+        	// 반복문을 통해 각 요소에 대해 작업을 수행합니다.
+        	for (var i = 0; i < numberOfElements; i++) {
+        	    // 현재 반복 중인 요소에 대한 작업을 수행합니다.
+        	    var currentElement = elements[i];
+        	    
+        	    // 현재 요소의 텍스트를 가져옵니다.
+        	    var elementText = currentElement.textContent || currentElement.innerText;
+				
+				// 만약 현재 요소의 텍스트가 '${sessionScope.loginuser.userid}'와 같다면
+        	    if (elementText.trim() == '${sessionScope.loginuser.name}') {
+        	    	check = '1';
+        	    }
+        	    else{
+        	    	
+        	    }
+        	
+        	}
+        	if(check != '1'){
+        		
+        		$.ajax({
+ 	               url:"<%= ctxPath%>/shop/reviewRegister.up",
+ 	               type:"POST",
+ 	               data:queryString,
+ 	               dataType:"JSON",
+ 	               success:function(json){ 
+ 	                  console.log(JSON.stringify(json));
+ 	                  /*
+ 	                     {"n":1} 또는 {"n":-1} 또는 {"n":0}
+ 	                  */
+ 	                  
+ 	                  if(json.i == 1) {
+ 	                     // 제품후기 등록(insert)이 성공했으므로 제품후기글을 새로이 보여줘야(select) 한다.
+ 						 goReviewListView(); // 제품후기글을 보여주는 함수 호출하기 
+ 	                  }
+ 	                  else if(json.i == -1)  {
+ 	                  // 동일한 제품에 대하여 동일한 회원이 제품후기를 2번 쓰려고 경우 unique 제약에 위배됨 
+ 	                  // alert("이미 후기를 작성하셨습니다.\n작성하시려면 기존의 제품후기를\n삭제하시고 다시 쓰세요.");
+ 	                     swal("이미 후기를 작성하셨습니다.\n작성하시려면 기존의 제품후기를\n삭제하시고 다시 쓰세요.");
+ 	                  }
+ 	                  else  {
+ 	                     // 제품후기 등록(insert)이 실패한 경우 
+ 	                     alert("제품후기 글쓰기가 실패했습니다.");
+ 	                  }
+ 	                  
+ 	                  $("textarea[name='contents']").val("").focus();
+ 	               },
+ 	               error: function(request, status, error){
+ 	                  alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+ 	               }
+ 	            });
+        		
+        	}
+        	else{
+        		
+        		alert("이미 후기등록을 하셨네요");
+        		
+        	}
+        	
+        	
+        	
+        
         	
 		}// end of if ~ else
 		
@@ -524,7 +566,7 @@
                   let loginuserid = "${sessionScope.loginuser.userid}";
                                  
                   v_html += "<div id='review"+index+"'><span class='markColor'>▶</span>&nbsp;"+item.contents+"</div>" // div마다 고유한 값을 주었다. 수정, 삭제를 위해
-                          + "<div class='customDisplay'>"+item.name+"</div>"      
+                          + "<div class='customDisplay namecheck'>"+item.name+"</div>"      
                           + "<div class='customDisplay'>"+item.writeDate+"</div>";
                    
                    if( loginuserid == "") { 

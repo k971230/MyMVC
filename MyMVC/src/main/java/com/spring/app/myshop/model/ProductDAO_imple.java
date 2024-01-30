@@ -125,5 +125,65 @@ public class ProductDAO_imple implements ProductDAO {
 	}
 
 
+	@Override
+	public int isOrderCheck(Map<String, String> paraMap) {
+		
+		return sqlsession.selectOne("product.isOrderCheck", paraMap);
+	}
+
+
+	@Override
+	public int reviewDel(String review_seq) {
+		
+		int n = sqlsession.delete("product.reviewDel", review_seq);
+		
+		return n;
+	}
+
+
+	@Override
+	public int reviewUpdate(Map<String, String> paraMap) {
+		int n = sqlsession.update("product.reviewUpdate", paraMap);
+		
+		return n;
+	}
+
+
+	@Override
+	public int likeAdd(Map<String, String> paraMap) {
+		int n = sqlsession.insert("product.likeAdd", paraMap);
+		return n;
+	}
+
+
+	@Override
+	public int delAdd(Map<String, String> paraMap) {
+		int d = sqlsession.delete("product.delAdd", paraMap);
+		
+		return d;
+	}
+
+
+	@Override
+	public Map<String, Integer> getLikeDislikeCnt(String pnum) {
+		Map<String, Integer> map = sqlsession.selectOne("product.getLikeDislikeCnt", pnum);
+		return map;
+	}
+
+
+	@Override
+	public int likedisAdd(Map<String, String> paraMap) {
+		int d = sqlsession.delete("product.likedisAdd", paraMap);
+		return d;
+	}
+
+
+	@Override
+	public int deldisAdd(Map<String, String> paraMap) {
+		int n = sqlsession.insert("product.deldisAdd", paraMap);
+		return n;
+	}
+
+
 
 }

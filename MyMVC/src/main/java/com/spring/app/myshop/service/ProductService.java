@@ -41,6 +41,17 @@ public interface ProductService {
 	
 	List<PurchaseReviewsVO> reviewList(String fk_pnum);
 
+	int isOrderCheck(Map<String, String> paraMap);
+
+	int reviewDel(String review_seq);
+	
+	int reviewUpdate(Map<String, String> paraMap);
+
+	int likeAdd(Map<String, String> paraMap);
+
+	Map<String, Integer> getLikeDislikeCnt(String pnum);
+
+	int dislikeAdd(Map<String, String> paraMap);
 
 
 

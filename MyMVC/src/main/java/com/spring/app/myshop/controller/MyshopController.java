@@ -453,6 +453,164 @@ public class MyshopController {
 		
 	}
 	
+	@ResponseBody
+	@GetMapping(value="/shop/isOrder.up", produces="text/plain;charset=UTF-8")
+	public String isOrderCheck(HttpServletRequest request) throws Exception {
+		
+		String fk_pnum = request.getParameter("fk_pnum");
+	    String fk_userid = request.getParameter("fk_userid");
+	    
+	    Map<String, String> paraMap = new HashMap<>();
+	    
+	    paraMap.put("fk_pnum", fk_pnum);
+	    paraMap.put("fk_userid", fk_userid);
+		
+		int n = productservice.isOrderCheck(paraMap);
+		
+		System.out.println("isOrderCheck=>"+n);
+		
+		Boolean bool = true;
+		
+		if(n<1) {
+			
+			bool = false;
+			
+		}
+		
+		JSONObject jsonObj = new JSONObject();
+	    jsonObj.put("isOrder", bool);
+	    
+	    String json = jsonObj.toString();
+	    request.setAttribute("json", json);
+			
+		return json;
+		
+	}
+	
+	@ResponseBody
+	@PostMapping(value="/shop/reviewDel.up", produces="text/plain;charset=UTF-8")
+	public String reviewDel(HttpServletRequest request) throws Exception {
+		
+		 String review_seq = request.getParameter("review_seq");
+		 
+		 
+		 int n = productservice.reviewDel(review_seq);
+	
+		
+		JSONObject jsonObj = new JSONObject();
+	    jsonObj.put("n", n);
+	    
+	    String json = jsonObj.toString();
+	    request.setAttribute("json", json);
+			
+		return json;
+		
+	}
+	
+	@ResponseBody
+	@PostMapping(value="/shop/reviewUpdate.up", produces="text/plain;charset=UTF-8")
+	public String reviewUpdate(HttpServletRequest request) throws Exception {
+		
+		String review_seq = request.getParameter("review_seq");
+	    String contents = request.getParameter("contents");
+		 
+	    // !!!! 크로스 사이트 스크립트 공격에 대응하는 안전한 코드(시큐어코드) 작성하기 !!!! //
+        contents = contents.replaceAll("<", "&lt;");
+        contents = contents.replaceAll(">", "&gt;");
+        
+        // 입력한 내용에서 엔터는 <br>로 변환시키기 
+        contents = contents.replaceAll("\r\n", "<br>");
+		
+        Map<String, String> paraMap = new HashMap<>();
+	    paraMap.put("review_seq", review_seq);
+	    paraMap.put("contents", contents);
+	       
+	    int n = productservice.reviewUpdate(paraMap); // sql 문에 오류가나면 0을 반환하는 것이 아닌 익셉션을 던지기 때문에 잡아줘야한다.
+		
+	    JSONObject jsonObj = new JSONObject();
+	    jsonObj.put("n", n);
+	    
+	    String json = jsonObj.toString();
+	    request.setAttribute("json", json);
+			
+		return json;
+		
+	}
+	
+	
+	@ResponseBody
+	@PostMapping(value="/shop/likeAdd.up", produces="text/plain;charset=UTF-8")
+	public String likeAdd(HttpServletRequest request) throws Exception {
+		
+		String pnum = request.getParameter("pnum");
+	    String userid = request.getParameter("userid");
+		
+	    Map<String,String> paraMap = new HashMap<>();
+	    paraMap.put("pnum", pnum);
+	    paraMap.put("userid", userid);
+	    
+	    int n = productservice.likeAdd(paraMap);
+	    // n => 1 이라면 정상투표,  n => 0 이라면 중복투표
+	    
+	    JSONObject jsonObj = new JSONObject();
+	    jsonObj.put("n", n);
+	    
+	    String json = jsonObj.toString();
+	    request.setAttribute("json", json);
+	    
+		return json;
+		
+	}
+	
+	
+	
+	@ResponseBody
+	@PostMapping(value="/shop/dislikeAdd.up", produces="text/plain;charset=UTF-8")
+	public String dislikeAdd(HttpServletRequest request) throws Exception {
+		
+		String pnum = request.getParameter("pnum");
+	    String userid = request.getParameter("userid");
+		
+	    Map<String,String> paraMap = new HashMap<>();
+	    paraMap.put("pnum", pnum);
+	    paraMap.put("userid", userid);
+	    
+	    int n = productservice.dislikeAdd(paraMap);
+	    // n => 1 이라면 정상투표,  n => 0 이라면 중복투표
+	    
+	    JSONObject jsonObj = new JSONObject();
+	    jsonObj.put("n", n);
+	    
+	    String json = jsonObj.toString();
+	    request.setAttribute("json", json);
+	    
+		return json;
+		
+	}
+	
+	@ResponseBody
+	@GetMapping(value="/shop/likeDislikeCount.up", produces="text/plain;charset=UTF-8")
+	public String likeDislikeCount(HttpServletRequest request) throws Exception {
+		
+		String pnum = request.getParameter("pnum");
+	      
+	    
+	    Map<String, Integer> map = productservice.getLikeDislikeCnt(pnum);
+	    
+	    JSONObject jsonObj = new JSONObject(); // {}
+	    
+	    jsonObj.put("likecnt", map.get("likecnt"));       // {"likecnt":1}
+	    jsonObj.put("dislikecnt", map.get("dislikecnt")); // {"likecnt":1, "dislikecnt":0} 
+	    
+	    String json = jsonObj.toString(); // "{"likecnt":1, "dislikecnt":0}"
+	        
+	    return json;
+		
+	}
+	
+	
+	
+	
 	
 	
 	

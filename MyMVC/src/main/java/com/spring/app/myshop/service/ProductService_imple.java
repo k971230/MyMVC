@@ -113,6 +113,56 @@ public class ProductService_imple implements ProductService {
 		return reviewList;
 	}
 
+	@Override
+	public int isOrderCheck(Map<String, String> paraMap) {
+		int n = pdao.isOrderCheck(paraMap);
+		
+		return n;
+	}
+
+	@Override
+	public int reviewDel(String review_seq) {
+		int n = pdao.reviewDel(review_seq);
+		
+		return n;
+	}
+
+	@Override
+	public int reviewUpdate(Map<String, String> paraMap) {
+		int n = pdao.reviewUpdate(paraMap);
+		
+		return n;
+	}
+
+	@Override
+	public int likeAdd(Map<String, String> paraMap) {
+		
+		pdao.delAdd(paraMap);
+		
+		int n = pdao.likeAdd(paraMap);
+		
+		return n;
+	}
+	
+	@Override
+	public int dislikeAdd(Map<String, String> paraMap) {
+		
+		pdao.likedisAdd(paraMap);
+		
+		int n = pdao.deldisAdd(paraMap);
+		
+		return n;
+	}
+
+	@Override
+	public Map<String, Integer> getLikeDislikeCnt(String pnum) {
+		
+		Map<String, Integer> map = pdao.getLikeDislikeCnt(pnum);
+		return map;
+	}
+
+
+
 	
 
 }
