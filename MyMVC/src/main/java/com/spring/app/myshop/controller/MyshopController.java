@@ -385,6 +385,11 @@ public class MyshopController {
 		return mav;
 	}
 	
+	
+	
+	
+	
+	
 	@ResponseBody
 	@PostMapping(value="/shop/reviewRegister.up", produces="text/plain;charset=UTF-8")
 	public String reviewRegister(HttpServletRequest request) throws Exception {
@@ -426,13 +431,13 @@ public class MyshopController {
 		List<PurchaseReviewsVO> reviewList = productservice.reviewList(fk_pnum);
 		
 		JSONArray jsArr = new JSONArray(); // []
-		
+		System.out.println("reviewList.size()+"+reviewList.size());
 		if(reviewList.size() > 0) {
 			for(PurchaseReviewsVO reviewsvo : reviewList) {
 				
 				JSONObject jsobj = new JSONObject();                
 				jsobj.put("contents", reviewsvo.getContents());     
-				jsobj.put("name", reviewsvo.getMvo().getName());    
+				jsobj.put("name", reviewsvo.getName());    
 				jsobj.put("writeDate", reviewsvo.getWriteDate());   
 				jsobj.put("userid", reviewsvo.getFk_userid());      
 				jsobj.put("review_seq", reviewsvo.getReview_seq()); 
