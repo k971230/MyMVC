@@ -363,10 +363,10 @@
          				dataType:"json",
          				success:function(json){
          					if(json.isSuccess == 1) {
-                                location.href="<%=ctxPath%>/order/orderList.up";
+                                location.href="<%=ctxPath%>/shop/orderList.up";
                              }
                              else {
-                                location.href="<%=ctxPath%>/order/orderError.up";
+                                location.href="<%=ctxPath%>/shop/orderError.up";
                              }
          					
          				},
