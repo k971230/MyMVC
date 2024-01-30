@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class OrderController {
 	
 	
 	@GetMapping(value="/shop/orderList.up") 
-	public ModelAndView orderList(HttpServletRequest request, ModelAndView mav) {
+	public ModelAndView requiredLogin_orderList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
 		
@@ -386,7 +387,7 @@ public class OrderController {
 		// === *** 배송을 했다라는 확인 문자(SMS)를 주문을 한 사람(여러명)에게 보내기 종료 *** === //
 		if (n == 1) {
 			String message = "선택하신 제품들은 배송시작으로 변경되었습니다.";
-			String loc = request.getContextPath() + "/order/orderList.up";
+			String loc = request.getContextPath() + "/shop/orderList.up";
 
 			mav.addObject("message", message);
 			mav.addObject("loc", loc);
@@ -437,7 +438,7 @@ public class OrderController {
 		// === *** 배송을 했다라는 확인 문자(SMS)를 주문을 한 사람(여러명)에게 보내기 종료 *** === //
 		if (n == 1) {
 			String message = "선택하신 제품들은 배송완료로 변경되었습니다.";
-			String loc = request.getContextPath() + "/order/orderList.up";
+			String loc = request.getContextPath() + "/shop/orderList.up";
 
 			mav.addObject("message", message);
 			mav.addObject("loc", loc);
