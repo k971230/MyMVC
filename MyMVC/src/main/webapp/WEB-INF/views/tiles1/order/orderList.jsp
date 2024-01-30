@@ -8,7 +8,7 @@
    String ctxPath = request.getContextPath();
     //     /MyMVC
 %>
-
+ <script type="text/javascript" src="<%= ctxPath%>/js/myshop/categoryListJSON.js"></script>  
 <style type="text/css" >
    table#tblorder_map_List {width: 95%;
                     /* border: solid gray 1px; */
