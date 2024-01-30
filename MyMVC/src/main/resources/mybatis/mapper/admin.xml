@@ -7,14 +7,13 @@
 <mapper namespace="admin">
 
 	<select id="getTotalPage" parameterType="HashMap" resultType="int">
-		select ceil(count(*)/#{sizePerPage})
-        from tbl_member
-   	    where userid != 'admin'
-   	    <if test="searchType != ''">
-   	    	and #{searchType} like '%' || #{searchWord} || '%'
-   	    </if>
-   	   	
-	</select>
+    SELECT CEIL(COUNT(*) / #{sizePerPage})
+    FROM tbl_member
+    WHERE userid != 'admin'
+    <if test="searchType != ''">
+        AND ${searchType} LIKE '%' || #{searchWord} || '%'
+    </if>
+</select>
 	
 	<!-- 검색한거 회원목록 -->
 	<select id="select_Member_paging" parameterType="HashMap" resultType="com.spring.app.domain.MemberVO">
@@ -28,7 +27,7 @@
 	   	from tbl_member
 	   	where userid != 'admin'
 	   	<if test="searchType != '' and searchWord != ''">
-	   		and #{searchType} like '%'|| #{searchWord} ||'%' 
+	   		and ${searchType} like '%'|| #{searchWord} ||'%' 
 	   	</if>
 	   	order by registerday desc
 	   	) V

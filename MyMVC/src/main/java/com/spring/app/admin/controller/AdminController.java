@@ -64,10 +64,7 @@ public class AdminController {
 				}
 			}
 			
-			System.out.println("~~~~ 확인용 searchType : " + searchType);
-			System.out.println("~~~~ 확인용 searchWord : " + searchWord);
-			System.out.println("~~~~ 확인용 sizePerPage : " + sizePerPage);
-			System.out.println("~~~~ 확인용 currentShowPageNo : " + currentShowPageNo);
+			
 		
 			if(searchType == null ||
 			   (!"name".equals(searchType) &&
@@ -91,6 +88,7 @@ public class AdminController {
 			if(currentShowPageNo == null) {
 				currentShowPageNo = "1";
 			}
+			
 			
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("searchType", searchType);
@@ -167,25 +165,42 @@ public class AdminController {
 			String currentURL = MyUtil.getCurrentURL(request);
 			// 회원조회를 했을 시 현재 그 페이지로 그대로 되돌아가기 위한 용도로 쓰임
 			
+			System.out.println("~~~~ 확인용 searchType : " + searchType);
+			System.out.println("~~~~ 확인용 searchWord : " + searchWord);
+			System.out.println("~~~~ 확인용 sizePerPage : " + sizePerPage);
+			System.out.println("~~~~ 확인용 currentShowPageNo : " + currentShowPageNo);
 			List<MemberVO> memberList = service.select_Member_paging(paraMap);
-			System.out.println("memberList=> " + memberList);
-			request.setAttribute("memberList", memberList);
-			request.setAttribute("searchType", searchType);
-			request.setAttribute("searchWord", searchWord);
-			request.setAttribute("sizePerPage", sizePerPage);
-			request.setAttribute("pageBar", pageBar);
-			request.setAttribute("currentURL", currentURL);
+			
+			if(memberList.isEmpty() ) {
+				System.out.println("memberList null 임");
+			}
+			
+			
+			mav.addObject("memberList", memberList);
+			mav.addObject("searchType", searchType);
+			mav.addObject("searchWord", searchWord);
+			mav.addObject("sizePerPage", sizePerPage);
+			mav.addObject("pageBar", pageBar);
+			mav.addObject("currentURL", currentURL);
+			
+			mav.setViewName("tiles1.admin.memberList");
+			return mav;
+			
 		}
 		else {
 			// 로그인을 안한 경우 또는 일반사용자로 로그인 한 경우 
 			String message = "관리자만 접근이 가능합니다.";
 			String loc = "javascript:history.back()";
 			
-			request.setAttribute("message", message);
-			request.setAttribute("loc", loc);
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			
+			mav.setViewName("msg");
+			
+			return mav;
 		}
-		mav.setViewName("tiles1.admin.memberList");
-		return mav;
+		
+		
 	}
 	
 	// === 관리자(admin)로 로그인 했을때만 조회가 가능하도록 한다. === //

@@ -15,8 +15,7 @@ public interface AdminDAO {
 	// 검색이 없는 회원목록
 	List<MemberVO> select_Member_paging(Map<String, String> paraMap);
 
-	// 검색이 있는 회원목록
-	List<MemberVO> searchMemberList(Map<String, String> paraMap);
+
 
 	// 회원 상세
 	MemberVO selectOneMember(String userid);

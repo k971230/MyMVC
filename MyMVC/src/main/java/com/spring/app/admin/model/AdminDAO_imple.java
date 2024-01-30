@@ -60,4 +60,6 @@ public class AdminDAO_imple implements AdminDAO {
 		List<SpecVO> selectSpecList = sqlsession.selectList("admin.selectSpecList");
 		return selectSpecList;
 	}
+
+	
 }

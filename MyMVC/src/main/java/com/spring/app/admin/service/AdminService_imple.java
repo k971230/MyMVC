@@ -40,8 +40,7 @@ public class AdminService_imple implements AdminService {
 		String searchType = paraMap.get("searchType");
 		String searchWord = paraMap.get("searchWord");
 		
-		System.out.println("searchType => " + searchType);
-		System.out.println("searchWord => " + searchWord);
+		
 		
 		if("email".equals(searchType)) {
 			// 검색대상이 email 인경우
@@ -54,7 +53,7 @@ public class AdminService_imple implements AdminService {
 			} catch (GeneralSecurityException e) {
 				e.printStackTrace();
 			}
-			System.out.println("이메일 searchWord => " + searchWord);
+			
 		}
 		// 검색이 있다면
 		if( (searchType != null && !searchType.trim().isEmpty()) &&
