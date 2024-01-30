@@ -55,7 +55,7 @@ public class OrderController {
 	}// end of private String getOdrcode()---------------
 	
 	
-	@GetMapping(value="/order/orderList.up") 
+	@GetMapping(value="/shop/orderList.up") 
 	public ModelAndView orderList(HttpServletRequest request, ModelAndView mav) {
 		
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
