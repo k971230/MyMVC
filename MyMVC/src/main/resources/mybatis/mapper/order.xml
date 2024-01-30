@@ -6,5 +6,100 @@
 <!-- ==== 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="order">
 
+	<select id="getTotalCountOrder" parameterType="String" resultType="int">
+		select count(*) AS CNT 
+		from tbl_order A JOIN tbl_orderdetail B
+		ON A.odrcode = B.fk_odrcode
+		<if test="userid != 'admin'">
+			where A.fk_userid = #{userid}
+		</if>
+	</select>
+	
+	
+	<resultMap type="HashMap" id="getOrderListMap">
+		<result property="department_id" 	column="department_id" 	  javaType="String" />
+	</resultMap>
+	<select id="getOrderList" parameterType="HashMap" resultMap="getOrderListMap">
+		SELECT odrcode, fk_userid, odrdate, odrseqnum, fk_pnum, oqty, odrprice 
+		, deliverstatus, pname, pimage1, price, saleprice, point 
+		FROM 
+		( 
+			select ROW_NUMBER() OVER(ORDER BY B.FK_ODRCODE DESC, B.ODRSEQNUM ASC) AS RNO 
+				 , A.odrcode, A.fk_userid, to_char(A.odrdate, 'yyyy-mm-dd hh24:mi:ss') AS odrdate 
+				 , B.odrseqnum, B.fk_pnum, B.oqty, B.odrprice 
+				 , CASE B.deliverstatus 
+				   WHEN 1 THEN '주문완료' 
+				   WHEN 2 THEN '배송중' 
+				   WHEN 3 THEN '배송완료' 
+				   END AS deliverstatus 
+				 , C.pname, C.pimage1, C.price, C.saleprice, C.point 
+			from tbl_order A JOIN tbl_orderdetail B 
+			ON A.odrcode = B.fk_odrcode 
+			JOIN tbl_product C 
+			ON B.fk_pnum = C.pnum 
+		<if test="userid != 'admin'">
+			where A.fk_userid = #{userid}
+		</if>
+		)V
+		WHERE V.RNO BETWEEN #{startRno} AND #{endRno}
+	</select> 
+	
+		
+	<select id="odrcodeOwnerMemberInfo" parameterType="String" resultType="HashMap">
+	select userid, name, email, mobile, postcode, address, detailaddress, extraaddress, gender 
+		 , birthday, coin, point, to_char(registerday, 'yyyy-mm-dd') AS registerday 
+		 from tbl_member 
+		 where userid = (select fk_userid  
+		                 from tbl_order 
+		                 where odrcode = #{key} )
+	</select>
+	
+	
+	<select id="get_seq_tbl_order" resultType="Long">
+		select seq_tbl_order.nextval AS seq
+	    from dual
+	</select>
  
+ 
+ 	<insert id="insert_order">
+ 		insert into tbl_order(odrcode, fk_userid, odrtotalPrice, odrtotalPoint, odrdate)
+		values(#{odrcode}, #{userid}, #{sum_totalPrice}, #{sum_totalPoint}, default)
+ 	</insert>
+ 	
+ 	
+	<insert id="insert_orderdetail" parameterType="HashMap">
+            insert into tbl_orderdetail(odrseqnum, fk_odrcode, fk_pnum, oqty, odrprice, deliverStatus)
+            values(seq_tbl_orderdetail.nextval, #{odrcode}, to_number(#{pnum}), to_number(#{oqty}), to_number(#{totalPrice}), default)
+    </insert> 
+    
+    
+    <update id="oqty_update" parameterType="HashMap">
+    	update tbl_product set pqty = pqty - #{oqty} 
+		where pnum = #{pnum}
+    </update>
+    
+    <delete id="delete_cart" parameterType="String">
+    	delete from tbl_cart
+		where cartno = #{cartno}
+    </delete>
+    
+    <update id="coin_point_update">
+    	update tbl_member set coin = coin - #{sum_totalPrice} 
+							, point = point + #{sum_totalPoint} 
+		where userid = #{userid}
+    </update>
+   
+ 	
+ 	<update id="updateDeliverStart" parameterType="String">
+		update tbl_orderdetail set deliverstatus = 2 
+		where fk_odrcode || '/' || fk_pnum = #{odrcodePnum}
+	</update>
+	
+	
+	<update id="updateDeliverEnd" parameterType="String">
+		update tbl_orderdetail set deliverstatus = 3, deliverDate = sysdate
+		where fk_odrcode || '/' || fk_pnum = #{odrcodePnum}
+	</update>
+ 	
+ 	
 </mapper>

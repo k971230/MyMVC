@@ -9,7 +9,6 @@
     //     /MyMVC
 %>
 
-<script type="text/javascript" src="<%= ctxPath%>/js/myshop/categoryListJSON.js"></script>   
 <style type="text/css" >
    table#tblorder_map_List {width: 95%;
                     /* border: solid gray 1px; */
@@ -83,7 +82,7 @@
          
          const frm = document.frmDeliver;
          frm.method = "POST";
-         frm.action = "<%= ctxPath%>/shop/admin/deliverStart.up";
+         frm.action = "<%= ctxPath%>/order/admin/deliverStart.up";
          frm.submit();
 
       });// end of $("input#btnDeliverStart").click()------------------
@@ -122,7 +121,7 @@
          
          const frm = document.frmDeliver;
          frm.method = "POST";
-         frm.action = "<%= ctxPath%>/shop/admin/deliverEnd.up";
+         frm.action = "<%= ctxPath%>/order/admin/deliverEnd.up";
          frm.submit();   
          
       });// end of $("input#btnDeliverEnd").click()------------------
@@ -150,7 +149,7 @@
    
    function openMember_Modal(odrcode) {
          $.ajax({
-            url:"<%= ctxPath%>/shop/odrcodeOwnerMemberInfoJSON.up",
+            url:"<%= ctxPath%>/order/odrcodeOwnerMemberInfoJSON.up",
             data:{"odrcode":odrcode},
             dataType:"json",
             success:function(json){
