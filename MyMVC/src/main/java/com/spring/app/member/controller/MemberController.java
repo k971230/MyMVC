@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.spring.app.common.AES256;
 import com.spring.app.common.Sha256;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.member.service.MemberService;
@@ -34,9 +33,7 @@ public class MemberController {
 	@Autowired  
 	private MemberService memberservice;
 	
-	@Autowired
- 	private AES256 aES256;
-	
+		
 	// === 또는 ===
 	@PostMapping("/login/login.up")
 	public ModelAndView login(ModelAndView mav, HttpServletRequest request) {

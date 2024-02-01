@@ -2,7 +2,7 @@ package com.spring.app.member.service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
+
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +44,7 @@ public class MemberService_imple implements MemberService {
 			loginuser.setIdle(1);
 			
 			// === tbl_member 테이블의 idle 컬럼의 값을 1로 변경하기 === // 
-			int n = memberdao.updateIdle(paraMap.get("userid"));
+			memberdao.updateIdle(paraMap.get("userid"));
 		}
 		
 		if(loginuser != null) {
