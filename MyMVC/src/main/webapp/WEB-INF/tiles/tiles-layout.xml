@@ -26,6 +26,18 @@
 	</definition>
 	
 	
+	<!-- !! 중요 !! 순서가 바뀌면 안됨(* 많은것이 위에) -->
+	<definition name="myshop.*.*.*" extends="layout-tiles1">
+		<put-attribute name="content" value="/WEB-INF/views/myshop/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<definition name="myshop.*.*" extends="layout-tiles1">
+		<put-attribute name="content" value="/WEB-INF/views/myshop/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="myshop.*" extends="layout-tiles1">
+		<put-attribute name="content" value="/WEB-INF/views/myshop/{1}.jsp"/>
+	</definition>
+	
+	
 
 	
 </tiles-definitions>        

@@ -58,7 +58,6 @@ public class MemberService_imple implements MemberService {
 			}
 		}
 		
-		
 		if(loginuser == null) { // 로그인 실패시
 			String message = "아이디 또는 암호가 틀립니다.";
 		 // String loc = "javascript:history.back()";
@@ -128,6 +127,7 @@ public class MemberService_imple implements MemberService {
 		
 		return mav;
 	}
+	
     ///////////////////////////////////////////////////////////////////////////
 	
 	// 로그아웃 처리하기

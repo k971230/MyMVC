@@ -67,8 +67,8 @@
                  관리자전용                                <%-- .text-primary 는 글자색으로 파랑색임 --%>  
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                 <a class="dropdown-item text-primary" href="<%= ctxPath %>/member/memberList.up">회원목록</a>
-                 <a class="dropdown-item text-primary" href="<%= ctxPath %>/shop/admin/productRegister.up">제품등록</a>
+                 <a class="dropdown-item text-primary" href="<%= ctxPath %>/admin/memberList.up">회원목록</a>
+                 <a class="dropdown-item text-primary" href="<%= ctxPath %>/admin/productRegister.up">제품등록</a>
                  <div class="dropdown-divider"></div>
                  <a class="dropdown-item text-primary" href="<%= ctxPath %>/shop/orderList.up">전체주문내역</a>
               </div>

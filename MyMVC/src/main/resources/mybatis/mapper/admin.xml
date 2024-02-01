@@ -6,4 +6,55 @@
 <!-- ==== 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="admin">
 
+	<select id="getTotalPage" parameterType="HashMap" resultType="int">
+    SELECT CEIL(COUNT(*) / #{sizePerPage})
+    FROM tbl_member
+    WHERE userid != 'admin'
+    <if test="searchType != ''">
+        AND ${searchType} LIKE '%' || #{searchWord} || '%'
+    </if>
+</select>
+	
+	<!-- 검색한거 회원목록 -->
+	<select id="select_Member_paging" parameterType="HashMap" resultType="com.spring.app.domain.MemberVO">
+		SELECT userid, name, email, gender
+	    FROM 
+	    ( 
+	    	SELECT rownum AS RNO, userid, name, email, gender 
+	   		FROM 
+	   	( 
+	   	select userid, name, email, gender 
+	   	from tbl_member
+	   	where userid != 'admin'
+	   	<if test="searchType != '' and searchWord != ''">
+	   		and ${searchType} like '%'|| #{searchWord} ||'%' 
+	   	</if>
+	   	order by registerday desc
+	   	) V
+	   	) T
+	   	WHERE RNO BETWEEN (#{currentShowPageNo} * #{sizePerPage}) - (#{sizePerPage} - 1) AND (#{currentShowPageNo} * #{sizePerPage})
+	</select>
+	
+	<!-- 회원 상세 -->
+	<select id="selectOneMember" parameterType="String" resultType="com.spring.app.domain.MemberVO">
+		select userid, name, email, mobile, postcode, address, detailaddress, extraaddress, gender 
+			 , birthday, coin, point, to_char(registerday, 'yyyy-mm-dd') AS registerday 
+		from tbl_member 
+		where status = 1 and userid = #{userid}
+	</select>
+	
+	<!-- 카테고리 목록을 조회해오기 -->
+	<select id="selectCategoryList" resultType="com.spring.app.domain.CategoryVO">
+		select cnum, code, cname
+		from tbl_category
+		order by cnum asc
+	</select>
+	
+	<!-- SPEC 목록을 조회해오기 -->
+	<select id="selectSpecList" resultType="com.spring.app.domain.SpecVO">
+		select snum, sname
+		from tbl_spec
+		order by snum asc
+	</select> 
+	
 </mapper> 

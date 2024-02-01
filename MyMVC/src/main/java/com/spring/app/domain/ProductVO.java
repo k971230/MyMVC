@@ -1,10 +1,7 @@
 package com.spring.app.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
-@Setter
-@Getter
 public class ProductVO {
 
 	private int 	pnum;       // 제품번호
@@ -33,6 +30,10 @@ public class ProductVO {
 	private int totalPrice;         // 판매당시의 제품판매가 * 주문량
 	private int totalPoint;         // 판매당시의 포인트점수 * 주문량 
 		
+	private MultipartFile attach;
+	private String fileName;    // WAS(톰캣)에 저장될 파일명(2023112409291535243254235235234.png) 
+	private String orgFilename; // 진짜 파일명(강아지.png)  // 사용자가 파일을 업로드 하거나 파일을 다운로드 할때 사용되어지는 파일명  
+	private String fileSize;    // 파일크기 
 	
 	public ProductVO() { }
 	
@@ -60,7 +61,141 @@ public class ProductVO {
 	}
 
 	
+	public int getPnum() {
+		return pnum;
+	}
+
+	public void setPnum(int pnum) {
+		this.pnum = pnum;
+	}
+
+	public String getPname() {
+		return pname;
+	}
+
+	public void setPname(String pname) {
+		this.pname = pname;
+	}
+
+	public int getFk_cnum() {
+		return fk_cnum;
+	}
+
+	public void setFk_cnum(int fk_cnum) {
+		this.fk_cnum = fk_cnum;
+	}
+
+	public String getPcompany() {
+		return pcompany;
+	}
+
+	public void setPcompany(String pcompany) {
+		this.pcompany = pcompany;
+	}
+
+	public String getPimage1() {
+		return pimage1;
+	}
+
+	public void setPimage1(String pimage1) {
+		this.pimage1 = pimage1;
+	}
+
+	public String getPimage2() {
+		return pimage2;
+	}
+
+	public void setPimage2(String pimage2) {
+		this.pimage2 = pimage2;
+	}
+
+	public String getPrdmanual_systemFileName() {
+		return prdmanual_systemFileName;
+	}
+
+	public void setPrdmanual_systemFileName(String prdmanual_systemFileName) {
+		this.prdmanual_systemFileName = prdmanual_systemFileName;
+	}
+
+	public String getPrdmanual_orginFileName() {
+		return prdmanual_orginFileName;
+	}
+
+	public void setPrdmanual_orginFileName(String prdmanual_orginFileName) {
+		this.prdmanual_orginFileName = prdmanual_orginFileName;
+	}	
 	
+	public int getPqty() {
+		return pqty;
+	}
+
+	public void setPqty(int pqty) {
+		this.pqty = pqty;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public int getSaleprice() {
+		return saleprice;
+	}
+
+	public void setSaleprice(int saleprice) {
+		this.saleprice = saleprice;
+	}
+
+	public int getFk_snum() {
+		return fk_snum;
+	}
+
+	public void setFk_snum(int fk_snum) {
+		this.fk_snum = fk_snum;
+	}
+
+	public String getPcontent() {
+		return pcontent;
+	}
+
+	public void setPcontent(String pcontent) {
+		this.pcontent = pcontent;
+	}
+
+	public int getPoint() {
+		return point;
+	}
+
+	public void setPoint(int point) {
+		this.point = point;
+	}
+
+	public String getPinputdate() {
+		return pinputdate;
+	}
+
+	public void setPinputdate(String pinputdate) {
+		this.pinputdate = pinputdate;
+	}
+
+	public CategoryVO getCategvo() {
+		return categvo;
+	}
+
+	public void setCategvo(CategoryVO categvo) {
+		this.categvo = categvo;
+	}
+
+	public SpecVO getSpvo() {
+		return spvo;
+	}
+
+	public void setSpvo(SpecVO spvo) {
+		this.spvo = spvo;
+	}
 	
 	///////////////////////////////////////////////
 	// *** 제품의 할인률 ***
@@ -75,23 +210,57 @@ public class ProductVO {
 		// 할인률 = 100 - (판매가 * 100) / 정가
 		return 100 - (saleprice * 100)/price;
 	}
-	
-	
-	/////////////////////////////////////////////////
-	// *** 제품의 총판매가(실제판매가 * 주문량) 구해오기 ***
-	public void setTotalPriceTotalPoint(int oqty) {   
-		// int oqty 이 주문량이다.
-	
-		totalPrice = saleprice * oqty; // 판매당시의 제품판매가 * 주문량
-		totalPoint = point * oqty;     // 판매당시의 포인트점수 * 주문량 
-	}
-	
+
 	public int getTotalPrice() {
 		return totalPrice;
 	}
-	
+
+	public void setTotalPrice(int totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
 	public int getTotalPoint() {
 		return totalPoint;
 	}
+
+	public void setTotalPoint(int totalPoint) {
+		this.totalPoint = totalPoint;
+	}
+
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getOrgFilename() {
+		return orgFilename;
+	}
+
+	public void setOrgFilename(String orgFilename) {
+		this.orgFilename = orgFilename;
+	}
+
+	public String getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
+	}
+	
+	
+	
+	
 	
 }

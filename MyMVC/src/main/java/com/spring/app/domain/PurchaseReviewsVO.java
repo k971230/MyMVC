@@ -1,7 +1,5 @@
 package com.spring.app.domain;
 
-import com.spring.app.domain.MemberVO;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +12,7 @@ public class PurchaseReviewsVO {
 	private int fk_pnum; 
 	private String contents; 
 	private String writeDate;
+	private String name;
 	
 	private MemberVO mvo;
 	private ProductVO pvo;
@@ -21,7 +20,7 @@ public class PurchaseReviewsVO {
 	public PurchaseReviewsVO() { }
 
 	public PurchaseReviewsVO(int review_seq, String fk_userid, int fk_pnum, String contents, String writeDate,
-			MemberVO mvo, ProductVO pvo) {
+		MemberVO mvo, ProductVO pvo, String name) {
 		this.review_seq = review_seq;
 		this.fk_userid = fk_userid;
 		this.fk_pnum = fk_pnum;
@@ -29,6 +28,7 @@ public class PurchaseReviewsVO {
 		this.writeDate = writeDate;
 		this.mvo = mvo;
 		this.pvo = pvo;
+		this.contents = name;
 	}
 
 	
