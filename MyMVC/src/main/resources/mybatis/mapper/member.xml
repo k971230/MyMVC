@@ -36,4 +36,48 @@
 		update tbl_member set idle = 1 
 		where userid = #{userid}
 	</update>
+	
+	<insert id="registerMember" parameterType="com.spring.app.domain.MemberVO">
+	    insert into tbl_member(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday)
+		values(#{userid}, #{pwd}, #{name}, #{email}, #{mobile}, #{postcode}, #{address}, #{detailaddress}, #{extraaddress}, #{gender}, #{birthday})
+	</insert>
+	
+	<select id="idDuplicateCheck" parameterType="String" resultType="String">
+		 select userid from tbl_member where userid = #{userid}
+	</select>
+	
+	<select id="emailDuplicateCheck" parameterType="String" resultType="String">
+		 select email from tbl_member where email = #{email}
+	</select>
+	
+	<select id="emailDuplicateCheck2" parameterType="HashMap" resultType="String">
+		 select email from tbl_member where userid != #{userid} and email = #{email} 
+	</select>
+
+	<select id="duplicatePwdCheck" parameterType="HashMap" resultType="String">
+		 select pwd from tbl_member where userid = #{userid} and pwd = #{new_pwd} 
+	</select>	
+	
+	
+	<update id="updateMember" parameterType="com.spring.app.domain.MemberVO">
+		update tbl_member set name = #{name}
+		                     , pwd = #{pwd}
+					   		 , email = #{email}
+		                     , mobile = #{mobile}
+		                     , postcode = #{postcode} 
+		                     , address = #{address}
+		                     , detailaddress = #{detailaddress}
+		                     , extraaddress = #{extraaddress}
+		                     , lastpwdchangedate = sysdate
+				 where userid = #{userid}
+	</update>
+	
+	
+	
+	<update id="coinUpdateLoginUser" parameterType="HashMap">
+		update tbl_member set coin = coin + #{coinmoney}, point = point + #{point}
+		 where userid = #{userid}
+	</update>
+	
+	
 </mapper>

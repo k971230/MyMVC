@@ -691,7 +691,7 @@ function goRegister() {
 	// *** 약관에 동의를 했는지 검사하기 끝 *** //
 	
 	const frm = document.registerFrm;
-	frm.action = "memberRegister.up";
+	frm.action = "memberRegisterEnd.up";
 	frm.method = "post";
 	frm.submit();
 	

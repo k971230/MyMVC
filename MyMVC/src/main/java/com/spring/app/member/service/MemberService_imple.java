@@ -2,6 +2,7 @@ package com.spring.app.member.service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.AES256;
+import com.spring.app.common.Sha256;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.member.domain.MemberDAO;
 
@@ -49,6 +51,8 @@ public class MemberService_imple implements MemberService {
 			try {
 				 String email = aES256.decrypt(loginuser.getEmail()); 
 				 loginuser.setEmail(email);
+				 String mobile = aES256.decrypt(loginuser.getMobile()); 
+				 loginuser.setMobile(mobile);
 			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
 				e.printStackTrace();
 			}
@@ -112,11 +116,11 @@ public class MemberService_imple implements MemberService {
 					String goBackURL = (String) session.getAttribute("goBackURL");
 					
 					if(goBackURL != null) {
-						mav.setViewName("redirect:/MyMVC/"+goBackURL);
+						mav.setViewName("redirect:"+goBackURL);
 						session.removeAttribute("goBackURL"); // 세션에서 반드시 제거해주어야 한다. 
 					}
 					else {
-						mav.setViewName("redirect:/MyMVC/index.up"); // 시작페이지로 이동
+						mav.setViewName("redirect:/index.up"); // 시작페이지로 이동
 					}
 				}
 			}
@@ -143,5 +147,114 @@ public class MemberService_imple implements MemberService {
 		
 		return mav;
 	}
+
+	@Override
+	public int register(MemberVO mvo, HttpServletRequest request) throws Exception {
+		
+		String pwd = request.getParameter("pwd");
+		String email = request.getParameter("email");
+		String hp1 = request.getParameter("hp1");
+		String hp2 = request.getParameter("hp2");
+		String hp3 = request.getParameter("hp3");
+		// System.out.println("파라미터로 hp1" + hp1); 
+		String mobile = hp1+hp2+hp3;
+		mvo.setPwd(Sha256.encrypt(pwd));
+		mvo.setMobile(aES256.encrypt(mobile));
+		mvo.setEmail(aES256.encrypt(email));
+		//System.out.println("VO로 mobile" + mvo.getMobile());
+		
+		int n = memberdao.registerMember(mvo);
+
+		return n;
+	}
+
+	@Override
+	public boolean idDuplicateCheck(String userid) {
+		boolean isExists = false;
+		
+		String result  = memberdao.idDuplicateCheck(userid); // 행이 있으면(중복된 userid) true,
+		                      // 행이 없으면(사용가능한 userid) false
+		// 결과값이 비어있는지 확인
+		if (result != null && !result.isEmpty()) {
+			isExists = true;
+		} else {
+			isExists = false;
+		}
+		return isExists;
+	}
+
+	@Override
+	public boolean emailDuplicateCheck(String email) {
+		boolean isExists = false;
+		try {
+			email = aES256.encrypt(email);
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String result  = memberdao.emailDuplicateCheck(email); // 행이 있으면(중복된 email) true,
+		                      // 행이 없으면(사용가능한 email) false
+		// 결과값이 비어있는지 확인
+		if (result != null && !result.isEmpty()) {
+			isExists = true;
+		} else {
+			isExists = false;
+		}
+		return isExists;
+	}
+	
+
+	@Override
+	public boolean emailDuplicateCheck2(Map<String, String> paraMap) {
+		boolean isExists = false;
+		try {
+			paraMap.put("email", aES256.encrypt(paraMap.get("email")));
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String result  = memberdao.emailDuplicateCheck2(paraMap); // 행이 있으면(중복된 email) true,
+		                      // 행이 없으면(사용가능한 email) false
+
+		// 결과값이 비어있는지 확인
+		if (result != null && !result.isEmpty()) {
+			isExists = true;
+		} else {
+			isExists = false;
+		}
+		return isExists;
+	}
+
+	@Override
+	public boolean duplicatePwdCheck(Map<String, String> paraMap) {
+		
+		boolean isExists = false;
+
+		String result  = memberdao.duplicatePwdCheck(paraMap); // 행이 있으면(중복된 email) true,
+		// 결과값이 비어있는지 확인
+		if (result != null && !result.isEmpty()) {
+			isExists = true;
+		} else {
+			isExists = false;
+		}
+		return isExists;
+	}
+
+	@Override
+	public int updateMember(MemberVO mvo) {
+
+		int n = memberdao.updateMember(mvo); // 행이 있으면(중복된 email) true,
+		
+		return n;
+	}
+
+	@Override
+	public int coinUpdateLoginUser(Map<String, String> paraMap) {
+
+		int n = memberdao.coinUpdateLoginUser(paraMap); // 행이 있으면(중복된 email) true,
+		
+		return n;
+	}
+
 	
 }
