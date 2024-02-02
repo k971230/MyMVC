@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.spring.app.domain.MemberVO;
+import com.spring.app.domain.ProductVO;
 
 public interface OrderService {
 
@@ -20,6 +21,8 @@ public interface OrderService {
 	int updateDeliverStart(Map<String, Object> paraMap);
 
 	int updateDeliverEnd(Map<String, Object> paraMap);
+
+	List<ProductVO> getJumunProductList(Map<String, Object> paraMap);
 
 	
 }

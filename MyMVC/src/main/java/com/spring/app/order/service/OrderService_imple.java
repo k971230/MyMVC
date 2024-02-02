@@ -1,5 +1,6 @@
 package com.spring.app.order.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.app.domain.MemberVO;
+import com.spring.app.domain.ProductVO;
 import com.spring.app.order.model.OrderDAO;
 
 // ==== #31. Service 선언 ====
@@ -90,6 +92,26 @@ public class OrderService_imple implements OrderService {
 		}
 
 		return n;
+	}
+
+	@Override
+	public List<ProductVO> getJumunProductList(Map<String, Object> paraMap) {
+		
+		String[] pnum_arr = (String[]) paraMap.get("pnum_arr");
+		
+		List<ProductVO> jumunProductList = null;
+		for(int i=0; i<pnum_arr.length; i++) {
+			
+			String pnum = pnum_arr[i];
+			
+			jumunProductList = dao.getJumunProductList(pnum);
+			
+			
+		}// end of for----------------------------
+		
+		
+		
+		return jumunProductList;
 	}
 	
 	

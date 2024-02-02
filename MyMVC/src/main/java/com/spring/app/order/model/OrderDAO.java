@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.spring.app.domain.MemberVO;
+import com.spring.app.domain.ProductVO;
 
 public interface OrderDAO {
 
@@ -20,6 +21,8 @@ public interface OrderDAO {
 	int updateDeliverStart(String odrcodePnum);
 
 	int updateDeliverEnd(String odrcodePnum);
+
+	List<ProductVO> getJumunProductList(String pnum);
 
 	
 }

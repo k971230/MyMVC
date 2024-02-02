@@ -10,6 +10,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.spring.app.domain.MemberVO;
+import com.spring.app.domain.ProductVO;
 
 //==== #32. Repository(DAO) 선언 ====
 //@Component
@@ -175,6 +176,14 @@ public class OrderDAO_imple implements OrderDAO {
 		int	n = sqlsession.update("order.updateDeliverEnd", odrcodePnum);
 		return n;
 	}
+
+	@Override
+	public List<ProductVO> getJumunProductList(String pnum) {
+		List<ProductVO> jumunProductList = sqlsession.selectList("order.getJumunProductList", pnum);
+		return jumunProductList;
+	}
+
+	
 	
 	
 	

@@ -2,6 +2,7 @@ package com.spring.app.order.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -26,6 +27,11 @@ import com.spring.app.common.GoogleMail;
 import com.spring.app.domain.MemberVO;
 import com.spring.app.domain.ProductVO;
 import com.spring.app.order.service.OrderService;
+
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.service.DefaultMessageService;
 
 @EnableAspectJAutoProxy
 @Component
@@ -196,7 +202,7 @@ public class OrderController {
 	// === 전표(주문코드)를 생성해주는 메소드 생성하기 === //
 	@ResponseBody
 	@PostMapping(value="/order/orderAdd.up", produces="text/plain;charset=UTF-8")
-	public String orderAdd(HttpServletRequest request) {
+	public String orderAdd(HttpServletRequest request) throws Exception {
 		
 		String sum_totalPrice = request.getParameter("n_sum_totalPrice");
 		String sum_totalPoint = request.getParameter("n_sum_totalPoint");
@@ -284,17 +290,12 @@ public class OrderController {
 			
 			// str_pnum_join ==> "5,4,61"
 			
-			String pnumes = "'"+String.join("','", str_pnum_join.split("\\,"))+"'"; 
-			// ==> ["5", "4", "61"]
-			// "5','4','61"
-			// "'5','4','61'"
 			
 			// System.out.println("~~~~ 확인용 주문한 제품번호 pnumes : " + pnumes);
 			// ~~~~ 확인용 주문한 제품번호 pnumes : '5','4','61'
 			
-			
 			// 주문한 제품에 대해 email 보내기시 email 내용에 넣을 주문한 제품번호들에 대한 제품정보를 얻어오는 것.
-			/*List<ProductVO> jumunProductList = service.getJumunProductList(pnumes);
+			List<ProductVO> jumunProductList = service.getJumunProductList(paraMap);
 			
 			StringBuilder sb = new StringBuilder();
 	         
@@ -311,7 +312,7 @@ public class OrderController {
 	         
 	        String emailContents = sb.toString();
 	         
-	        mail.sendmail_OrderFinish(loginuser.getEmail(), loginuser.getName(), emailContents);*/
+	        mail.sendmail_OrderFinish(loginuser.getEmail(), loginuser.getName(), emailContents);
 	        ////////// === 주문이 완료되었다는 email 보내기 끝 === ///////////
 		}
 		
@@ -333,14 +334,6 @@ public class OrderController {
 	
 		
 	}// end of private String getOdrcode()---------------
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -384,17 +377,78 @@ public class OrderController {
 
 		System.out.println(n);
 
-		// === *** 배송을 했다라는 확인 문자(SMS)를 주문을 한 사람(여러명)에게 보내기 종료 *** === //
-		if (n == 1) {
-			String message = "선택하신 제품들은 배송시작으로 변경되었습니다.";
-			String loc = request.getContextPath() + "/shop/orderList.up";
+		
+		
+		
+		if(n == 1) {
+		    // === 배송을 했다라는 확인 문자(SMS)를 주문을 한 사람(여러명)에게 보내기 시작 ===
+           
+           Map<String, String> odrcodeMap = new HashMap<>(); 
+           // 동일한 전표에 서로 다른 제품들을 구매한 경우 동일 전표를 가진 사람에게는 SMS(문자)를 1번만 보내야 하므로
+           // 중복을 허락치 않는 HashMap 을 사용하기로 한다. => 키값을 덮어씌운다. 
+           
+           for(String odrcode : odrcodeArr) {
+              odrcodeMap.put(odrcode, odrcode);
+              // odrcodeMap 에 전표를 넣기(HashMap 이므로 중복된 전표가 있으면 덮어씌우므로 고유한 값만 존재하게 된다). 
+           }
+           
+           Set<String> odrcodeMapKeysets = odrcodeMap.keySet();
+           // 중복을 허락치 않는 키값들 얻어오기
+           
+           for(String key : odrcodeMapKeysets) {
+        	   
+        	   Map<String, String> infoMap = service.odrcodeOwnerMemberInfo(key);
+              // 주문코드 전표(key)소유주에 대한 사용자 정보를 조회해오는 것.
+        	   System.out.println(infoMap);
+              DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize("NCSIQDXMOEEYSYZC", "OIBOXYYZA7AN4XMMUPO7WATULJYXXAL6", "https://api.coolsms.co.kr");
+              // Message 패키지가 중복될 경우 net.nurigo.sdk.message.model.Message로 치환하여 주세요
+              Message message = new Message();
+              message.setFrom("01031417056");
+              try {
+				message.setTo(aes.decrypt(infoMap.get("MOBILE")));
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (GeneralSecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+              message.setText(infoMap.get("NAME")+"님 주문상품을 우체국택배로 배송했습니다.");
+              
+              System.out.println(request.getParameter("mobile"));
+              
+              
+              try {
+                // send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
+                messageService.send(message);
+                
+              } catch (NurigoMessageNotReceivedException exception) {
+                // 발송에 실패한 메시지 목록을 확인할 수 있습니다!
+                System.out.println(exception.getFailedMessageList());
+                System.out.println(exception.getMessage());
+              } catch (Exception exception) {
+                System.out.println(exception.getMessage());
+              }
 
-			mav.addObject("message", message);
-			mav.addObject("loc", loc);
+              
+           }// end of for--------------
+             // === *** 배송을 했다라는 확인 문자(SMS)를  주문을 한 사람(여러명)에게 보내기 종료 *** === //
+           
+           String message = "선택하신 제품들은 배송시작으로 변경되었습니다.";
+           String loc = request.getContextPath()+"/shop/orderList.up";
+           
+           request.setAttribute("message", message);
+           request.setAttribute("loc", loc);
+           
+           mav.setViewName("msg");
+        }
 
-			mav.setViewName("msg");
+			
 
-		}
+		
 		return mav;
 	}
 	
