@@ -41,7 +41,7 @@ $(document).ready(function(){
 		// ["09","30"] ==> "0930"
 		
 		const datetime = reservedate + reservetime;
-	//	console.log(datetime);
+		console.log(datetime);
 		// 202310210930
 		
 		let dataObj = {};
@@ -58,29 +58,10 @@ $(document).ready(function(){
 					   "datetime":datetime};
 		}
 		
-		$.ajax({
-			
-			url:"<%= ctxPath%>/member/smsSend.up", // 인증키 발송이면 smsSendKey.up 처럼 새로운 클래스를 하나 생성한다.
-			type:"post",
-			data:dataObj,
-			dataType:"json",
-			success:function(json){
-				// json 은 {"group_id":"R2GWPBT7UoW308sI","success_count":1,"error_count":0} 처럼 된다. 
-				
-				if(json.success_count == 1) {
-					$("div#smsResult").html("<span style='color: red; font-weight: bold;'>문자전송이 성공되었습니다.</span>");
-				}
-				else if(json.error_count != 0) {
-					$("div#smsResult").html("<span style='color: red; font-weight: bold;'>문자전송이 실패되었습니다.</span>");
-				}
-				
-				$("div#smsResult").show();
-				$("textarea#smsContent").val("");
-			},
-			error: function(request, status, error){
-				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-			}
-		});
+		const frm = document.smsFrm;
+		frm.action = "<%= ctxPath%>/admin/smsSend.up"; 
+		frm.method = "post";
+		frm.submit();
 		
 	});
 	  
@@ -167,6 +148,7 @@ $(document).ready(function(){
 		</table>
 		
 		<%-- ==== 휴대폰 SMS(문자) 보내기 ==== --%>
+		<form name="smsFrm">
 		<div class="border my-5 text-center" style="width: 60%; margin: 0 auto;">
 		  	<p class="h5 bg-info text-white">
 		  	  &gt;&gt;&nbsp;&nbsp;휴대폰 SMS(문자) 보내기 내용 입력란&nbsp;&nbsp;&lt;&lt;
@@ -186,13 +168,11 @@ $(document).ready(function(){
 		  	</div>
 		  	<div id="smsResult" class="p-3"></div>
 		</div>
-		
+		</form>
 	</c:if>
 
     <div class="text-center mb-5">
-       <button type="button" class="btn btn-secondary" onclick="javascript:location.href='memberList.up'">회원목록[처음으로]</button> 
-       <button type="button" class="btn btn-success mx-5" onclick="javascript:history.back()">회원목록[history.back()]</button>
-       <button type="button" class="btn btn-primary" onclick="javascript:location.href='<%= ctxPath%>${requestScope.goBackURL}'">회원목록[검색된결과]</button>
+       <button type="button" class="btn btn-primary" onclick="javascript:location.href='<%= ctxPath%>${requestScope.goBackURL}'">회원목록</button>
     </div>
     
 </div>

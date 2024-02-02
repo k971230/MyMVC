@@ -22,6 +22,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.service.DefaultMessageService;
+
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import com.spring.app.admin.service.AdminService;
 import com.spring.app.common.AES256;
@@ -245,13 +250,44 @@ public class AdminController {
 			request.setAttribute("goBackURL", goBackURL);
 			
 			mav.setViewName("tiles1.admin.memberOneDetail");
-			}
+		}
+		
 		
 		return mav;
 	}
 	
 		
-	
+	@PostMapping(value="/admin/smsSend.up")
+	public ModelAndView smsSend(ModelAndView mav, HttpServletRequest request) {
+		
+		DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize("NCSIQDXMOEEYSYZC", "OIBOXYYZA7AN4XMMUPO7WATULJYXXAL6", "https://api.coolsms.co.kr");
+		// Message 패키지가 중복될 경우 net.nurigo.sdk.message.model.Message로 치환하여 주세요
+		Message message = new Message();
+		message.setFrom("01031417056");
+		message.setTo(request.getParameter("mobile"));
+		message.setText(request.getParameter("smsContent"));
+		
+		System.out.println(request.getParameter("mobile"));
+		
+		
+		try {
+		  // send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
+		  messageService.send(message);
+		  
+		} catch (NurigoMessageNotReceivedException exception) {
+		  // 발송에 실패한 메시지 목록을 확인할 수 있습니다!
+		  System.out.println(exception.getFailedMessageList());
+		  System.out.println(exception.getMessage());
+		} catch (Exception exception) {
+		  System.out.println(exception.getMessage());
+		}
+		
+		mav.addObject("message", "메시지 전송이 성공되었습니다.");
+		mav.addObject("loc", request.getContextPath()+"/index.up");
+		mav.setViewName("msg");
+		
+		return mav;
+	}
 	
 	
 	@RequestMapping(value="/admin/productRegister.up")
@@ -332,11 +368,7 @@ public class AdminController {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-				
 			}
-				
-			
 		}
 		mav.setViewName("tiles1.admin.productRegister");
 		return mav;
