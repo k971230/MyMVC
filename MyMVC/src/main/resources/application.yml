@@ -29,6 +29,11 @@ spring: # 주의할 점은 내용작성시 들여쓰기 내어쓰기를 반드�
     restart: #컨트롤러, 모델단이 바뀌었을 때 프로젝트 재시작(reload) 설정 (정확히는 classpath에 있는 모든 파일)
       enabled: true #재시작(reload) 함
 
+  servlet:
+    multipart:
+      max-file-size: 10MB     # 파일 업로드 용량제한 설정하기. 파일 업로드 용량을 설정하지 않으면 기본값은 1048576 bytes (1MB)으로 된다.
+      max-request-size: 10MB  # 파일 업로드 용량제한 설정하기. 파일 업로드 용량을 설정하지 않으면 기본값은 1048576 bytes (1MB)으로 된다.    
+
 mybatis: #mybatis 설정
   type-aliases-package: com.spring.app.domain 
  #mapper-locations: com/spring/app/**/mapper/*.xml   #src/main/java 아래 패키지속에 매퍼파일을 만드는 경우 
@@ -41,6 +46,8 @@ logging: #로그 지정
     #com.zaxxer.hikari.HikariConfig: DEBUG
     #com.zaxxer.hikari: TRACE 
     
+
+
 server:
   port: 8000
   servlet:

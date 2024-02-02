@@ -256,8 +256,8 @@
 		   <tr>
 		      <td width="25%" class="prodInputName">제품이미지</td>
 		      <td width="75%" align="left" style="border-top: hidden; border-bottom: hidden;">
-		         <input type="file" name="pimage1" class="infoData img_file" accept='image/*' /><span class="error">필수입력</span>
-		         <input type="file" name="pimage2" class="infoData img_file" accept='image/*' /><span class="error">필수입력</span>
+		         <input type="file" name="filePimage1" class="infoData img_file" accept='image/*' /><span class="error">필수입력</span>
+		         <input type="file" name="filePimage2" class="infoData img_file" accept='image/*' /><span class="error">필수입력</span>
 		      </td>
 		   </tr>
 		   <tr>

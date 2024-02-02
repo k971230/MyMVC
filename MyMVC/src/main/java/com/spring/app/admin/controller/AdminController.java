@@ -318,10 +318,11 @@ public class AdminController {
 			}
 			else { // "POST" 라면  
 				MultipartFile attach = ProductVO.getAttach();
+				
 				String root = session.getServletContext().getRealPath("/");
 				System.out.println("확인용 webapp 의 절대 경로 : "+ root);
 				// 확인용 webapp 의 절대 경로 : /Users/sub/workspace_spring_framework/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/board/
-
+						
 				String path = root + "resources" + File.separator+"files";
 				System.out.println("확인용 path : "+ path);
 				
