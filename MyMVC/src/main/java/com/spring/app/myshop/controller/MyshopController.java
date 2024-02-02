@@ -549,10 +549,15 @@ public class MyshopController {
 	    paraMap.put("pnum", pnum);
 	    paraMap.put("userid", userid);
 	    
-	    int n = productservice.likeAdd(paraMap);
-	    // n => 1 이라면 정상투표,  n => 0 이라면 중복투표
-	    
 	    JSONObject jsonObj = new JSONObject();
+	    int n = 0;
+	    try {
+	     n = productservice.likeAdd(paraMap);
+	    // n => 1 이라면 정상투표,  n => 0 이라면 중복투표
+	    }catch (Exception e) {
+			n = 0;
+		}
+	    
 	    jsonObj.put("n", n);
 	    
 	    String json = jsonObj.toString();
@@ -574,11 +579,15 @@ public class MyshopController {
 	    Map<String,String> paraMap = new HashMap<>();
 	    paraMap.put("pnum", pnum);
 	    paraMap.put("userid", userid);
-	    
-	    int n = productservice.dislikeAdd(paraMap);
-	    // n => 1 이라면 정상투표,  n => 0 이라면 중복투표
-	    
 	    JSONObject jsonObj = new JSONObject();
+	    int n = 0;
+	    try {
+	     n = productservice.dislikeAdd(paraMap);
+	    // n => 1 이라면 정상투표,  n => 0 이라면 중복투표
+	    }catch (Exception e) {
+	    	n = 0;
+		}
+	   
 	    jsonObj.put("n", n);
 	    
 	    String json = jsonObj.toString();

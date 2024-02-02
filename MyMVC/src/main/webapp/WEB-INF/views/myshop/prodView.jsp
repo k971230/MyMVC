@@ -468,7 +468,13 @@
                 // {"msg":"이미 좋아요를 클릭하셨기에\n 두번 이상 좋아요는 불가합니다."}
                   
              //  alert(json.msg);
-                 swal(json.msg);
+             
+             if(json.n == 0){
+            	 alert("안댐");
+             }else{
+            	 alert("성공");
+             }
+                 
                  goLikeDislikeCount();
             },
             error: function(request, status, error){
@@ -499,13 +505,12 @@
 	                 "userid":"${sessionScope.loginuser.userid}"},
 	            dataType:"json", 
 	            success:function(json) {
-	          //   console.log(JSON.stringify(json));
-	                // {"msg":"해당제품에\n 싫어요를 클릭하셨습니다."}
-	                // 또는
-	                // {"msg":"이미 싫어요를 클릭하셨기에\n 두번 이상 싫어요는 불가합니다."}
-	                  
-	               //  alert(json.msg);
-	                   swal(json.msg);
+	          	
+	            	if(json.n == 0){
+	               	 alert("안댐");
+	                }else{
+	               	 alert("성공");
+	                }
 	                   goLikeDislikeCount();
 	            },
 	            error: function(request, status, error){
@@ -528,7 +533,7 @@
 	         success:function(json) {
 	         // console.log(JSON.stringify(json));
 	            // {"likecnt":1, "dislikecnt":0}
-	             
+	           
 	            $("span#likeCnt").html(json.likecnt);
 	            $("span#dislikeCnt").html(json.dislikecnt);
 	         },
